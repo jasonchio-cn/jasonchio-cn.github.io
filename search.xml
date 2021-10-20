@@ -76,11 +76,69 @@
       
         <tags>
             
+            <tag> 笔记 </tag>
+            
             <tag> C++ </tag>
             
             <tag> 基础知识 </tag>
             
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Linux内核裁剪</title>
+      <link href="/posts/2771.html"/>
+      <url>/posts/2771.html</url>
+      
+        <content type="html"><![CDATA[<h3 id="Kconfig和menuconfig文件"><a href="#Kconfig和menuconfig文件" class="headerlink" title="Kconfig和menuconfig文件"></a>Kconfig和menuconfig文件</h3><p>内核源码的每一级目录下都会有 <strong>Kconfig</strong> 文件，文件里的<code>menu</code>对应<code>make menuconfig</code>中的菜单项，菜单中包含若干子选项，由 <code>source</code>引入各级子目录下的 <code>Kconfig</code>文件，由此构成了<code>menuconfig</code>。</p><p><img src="https://images.961110.xyz/images/2021/10/20/Kconfigmenuconfig.png" alt="Kconfig和menuconfig文件.png"></p><p>每一个子选项在代码中对应的是一个个的<code>config</code></p><p>其中选项中<code>bool</code>代表二选一(编译、不编译)</p><p><code>trastate</code>代表三选一(编译、不编译、编译成模块)</p><p><code>depends on</code>代表其依赖的配置。</p><p><img src="https://images.961110.xyz/images/2021/10/20/config.png" alt="config的构成.png"></p><h3 id="config文件"><a href="#config文件" class="headerlink" title=".config文件"></a>.config文件</h3><p><code>menuconfig</code>又会生成源码根目录下的<code>.config</code>文件，由各个<code>Kconfig</code>中的<code>config</code>宏定义构成。</p><h3 id="makefile文件"><a href="#makefile文件" class="headerlink" title="makefile文件"></a>makefile文件</h3><p>编译内核依赖的makefile文件会根据<code>.config</code>文件来决定是否将对应部分编译进内核。</p><h3 id="四者的关系图如下"><a href="#四者的关系图如下" class="headerlink" title="四者的关系图如下"></a>四者的关系图如下</h3><p><img src="https://images.961110.xyz/images/2021/10/20/menuconfig-Kconfig-.config-makefile.png" alt="menuconfig相关文件的关系"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Linux </tag>
+            
+            <tag> 内核裁剪 </tag>
+            
             <tag> 笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>ARM目标代码优化</title>
+      <link href="/posts/64925.html"/>
+      <url>/posts/64925.html</url>
+      
+        <content type="html"><![CDATA[<h2 id="速度优化"><a href="#速度优化" class="headerlink" title="速度优化"></a>速度优化</h2><h3 id="通用优化方法"><a href="#通用优化方法" class="headerlink" title="通用优化方法"></a>通用优化方法</h3><p><strong>减少计算强度</strong></p><ol><li>左右位移代替乘除2运算: <code>i = i * 5 = (i &lt;&lt; 2) + 1</code> ，位移有桶形位移器，执行比乘除快。</li><li>乘法代替乘方运算: <code>i = pow(i, 3) = i * i * i</code>，ARM中有乘法器，所以比调用函数更快。</li><li>与运算代替求余运算: <code>i = i % 8 = i &amp; 0x07</code>，ARM中没有求余指令，但是有与指令。</li></ol><p><strong>优化循环终止条件</strong></p><p>使用减计数代替惯用的加计数，使用<code>i != 0</code>作循环终止条件。加法计数在循环判断的时候是用CMP和BLE实现的，而用<code>i != 0</code>可以用BNE一条指令代替。</p><p><strong>使用<code>inline</code>函数</strong></p><p><code>inline</code>函数主要节省了调用函数所占用的时间。缺点就是被频繁调用时，代码量将增大，以空间换时间。</p><p><strong>利用已有结果</strong></p><p><code>tmp = a * b;</code></p><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">i = a * b + c;</span><br><span class="line">j = a * b * d;</span><br></pre></td></tr></table></figure><p><strong>避免循环</strong></p><p>拆开小循环</p><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">x[i] = i;</span><br><span class="line">&#125;</span><br><span class="line">x[<span class="number">0</span>] = <span class="number">0</span>; x[<span class="number">1</span>] = <span class="number">1</span>; x[<span class="number">2</span>] = <span class="number">2</span>;...;x[<span class="number">9</span>] = <span class="number">9</span>;</span><br></pre></td></tr></table></figure><h3 id="处理器相关的优化方法"><a href="#处理器相关的优化方法" class="headerlink" title="处理器相关的优化方法"></a>处理器相关的优化方法</h3><p><strong>保持流水线畅通</strong></p><p>将循环拆解来<strong>减小跳转指令在循环指令中所占的比重。</strong></p><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">memcopy</span><span class="params">(<span class="keyword">char</span> *to, <span class="keyword">char</span> *from, <span class="keyword">unsigned</span> <span class="keyword">int</span> nbytes)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="keyword">int</span> *p_to = (<span class="keyword">int</span> *)to;</span><br><span class="line"><span class="keyword">int</span> *p_from = (<span class="keyword">int</span> *)from;</span><br><span class="line"><span class="keyword">while</span>(nbytes) &#123;</span><br><span class="line">*p_to++ = *p_from++;</span><br><span class="line">*p_to++ = *p_from++;</span><br><span class="line">*p_to++ = *p_from++;</span><br><span class="line">*p_to++ = *p_from++;</span><br><span class="line">nbytes - = <span class="number">16</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>经过优化后，一次循环可以处理16 个字节。</p><p><strong>使用寄存器变量</strong></p><p>整型、指针、浮点等类型的变量都可以分配寄存器；一个结构的部分或者全部也可以分配寄存器。给循环体中需要频繁访问的变量分配寄存器也能在一定程度上提高程序效率。</p><h3 id="指令集相关的优化方法"><a href="#指令集相关的优化方法" class="headerlink" title="指令集相关的优化方法"></a>指令集相关的优化方法</h3><p><strong>避免除法</strong></p><p>ARM7 指令集中没有除法指令，其除法是通过调用 C 库函数实现的。一个32 位的除法通常需要20~140 个时钟周期。</p><ul><li>例如<code>if((x/y) &gt; z)</code>可变通为<code>if(x &gt; (y × z))</code></li><li>在能满足精度，且存储器空间冗余的情况下， 也可考虑使用查表法代替除法。</li><li>当除数为2 的幂次方时， 应用移位操作代替除法。</li></ul><p><strong>在后来支持硬件除法的芯片（Cortex-M3）中，用<code>SDIV</code>指令代替了库函数的调用。</strong></p><p><strong>利用条件执行</strong></p><p>ARM 指令集的一个重要特征就是<strong>所有的指令均可包含一个可选的条件码</strong>。当程序状态寄存器(PSR)中的条件码标志满足指定条件时，指令才能执行，因此可以省去单独的判断指令。</p><p><strong>使用合适的变量类型</strong></p><p>在操作char、short型的ARM局部变量，往往比操作32 位变量需要更多指令，所以应该尽可能地避免使用。</p><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">wordinc</span><span class="params">(<span class="keyword">int</span> a)</span></span>&#123;</span><br><span class="line">ADD a1,a1,#<span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> a + <span class="number">1</span>; MOV pc,lr</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">short</span> <span class="title">shortinc</span><span class="params">(<span class="keyword">short</span> a)</span> </span>&#123;</span><br><span class="line">ADD a1,a1,#<span class="number">1</span></span><br><span class="line">MOV a1,a1,LSL #<span class="number">16</span></span><br><span class="line"><span class="keyword">return</span> a + <span class="number">1</span>; MOV a1,a1,ASR #<span class="number">16</span>ARM</span><br><span class="line">&#125; MOV pc,<span class="function">lr</span></span><br><span class="line"><span class="function"><span class="keyword">char</span> <span class="title">charinc</span><span class="params">(<span class="keyword">char</span> a)</span></span>&#123;</span><br><span class="line">ADD a1,a1,#<span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> a + <span class="number">1</span>; </span><br><span class="line">AND a1,a1,#&amp;ff</span><br><span class="line">&#125; MOV pc,lr</span><br></pre></td></tr></table></figure><h3 id="存储器相关的优化方法"><a href="#存储器相关的优化方法" class="headerlink" title="存储器相关的优化方法"></a>存储器相关的优化方法</h3><p><strong>用查表代替计算</strong></p><p>用空间换速度：例如需要频繁计算正弦或余弦函数值时，可预先将函数值计算出来置于内存中供以后ARM查找。</p><p><strong>充分利用片内RAM</strong></p><p>一些厂商出产的ARM 芯片内集成有一定容量的RAM，处理器对片内RAM 的访问速度要快于对外部RAM 的访问。</p><h3 id="编译器相关的优化方法"><a href="#编译器相关的优化方法" class="headerlink" title="编译器相关的优化方法"></a>编译器相关的优化方法</h3><p>根据编译器提供的优化选项进行设置。多数编译器都支持对程序速度和程序大小的优化，有些编译器还允许用户选择可供优化的内容及优化的程度。</p><h2 id="尺寸优化"><a href="#尺寸优化" class="headerlink" title="尺寸优化"></a>尺寸优化</h2><h3 id="使用多寄存器操作指令"><a href="#使用多寄存器操作指令" class="headerlink" title="使用多寄存器操作指令"></a>使用多寄存器操作指令</h3><p>ARM 指令集中的多寄存器操作指令LDM/STM 可以加载/ 存储多个寄存器，这在保存/ 恢复寄存器组的状态及进行大块数据复制时非常有效。例如要将寄存器R4~R12 及R14 的内容保存到堆栈中，若用<code>STR</code> 指令共需要10 条，而一条<code>STMEA R13!, &#123;R4 ?? R12, R14&#125;</code> 指令就能达到相同的目的，虽然在执行速度上不一定有提高。</p><h3 id="合理安排变量顺序"><a href="#合理安排变量顺序" class="headerlink" title="合理安排变量顺序"></a>合理安排变量顺序</h3><p>ARM程序中的32 位/16 位变量必须按字/ 半字对齐</p><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span>  i1 ~ i4;</span><br><span class="line"><span class="keyword">char</span> c1 ~ c4;</span><br><span class="line"></span><br><span class="line">按照i1、c1、i2、c2、i3、c3、i4、c4的顺序排列的话，<span class="number">8</span>位的<span class="keyword">char</span>型变量实际上占用的是一个<span class="number">32</span>位寄存器，空间浪费</span><br><span class="line">所以应将 <span class="keyword">int</span> 型变量和 <span class="keyword">char</span> 型变量按类似i1、i2、i3、i4、c1、c2、c3、c4 的顺序连续存放。</span><br></pre></td></tr></table></figure><h3 id="使用Thumb指令"><a href="#使用Thumb指令" class="headerlink" title="使用Thumb指令"></a>使用Thumb指令</h3><p>16 位的 Thumb 指令是ARM 体系结构的扩充。Thumb 指令集是大多数常用32 位ARM 指令压缩成16 位宽指令的集合。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 代码 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 笔记 </tag>
+            
+            <tag> ARM </tag>
+            
+            <tag> 代码优化 </tag>
             
         </tags>
       
