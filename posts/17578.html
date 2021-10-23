@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>如何搭建 GTA 5 私服 - FiveM 的搭建 | Jason's Blog</title><meta name="keywords" content="教程,游戏,Linux"><meta name="author" content="JasonChio"><meta name="copyright" content="JasonChio"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="原文地址 leif.fun  打开官网（中 英文皆可），点击 _下载服务端 (非商业)_，如图所示 网页跳转到官方说明文档 该说明文档提供了安装在 Windows 和 Linux 上的方法，下面逐一介绍。 Windows前提条件:1.Visual C++ Redistributable 2019 2.Git 安装步骤 创建新文件夹为D:\FxServer  下载最新 Windows 端服务器文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何搭建 GTA 5 私服 - FiveM 的搭建">
+<meta property="og:url" content="https://blog.961110.xyz/posts/17578.html">
+<meta property="og:site_name" content="Jason&#39;s Blog">
+<meta property="og:description" content="原文地址 leif.fun  打开官网（中 英文皆可），点击 _下载服务端 (非商业)_，如图所示 网页跳转到官方说明文档 该说明文档提供了安装在 Windows 和 Linux 上的方法，下面逐一介绍。 Windows前提条件:1.Visual C++ Redistributable 2019 2.Git 安装步骤 创建新文件夹为D:\FxServer  下载最新 Windows 端服务器文件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.961110.xyz/images/2021/10/23/GTAV.jpg">
+<meta property="article:published_time" content="2021-10-23T03:25:00.000Z">
+<meta property="article:modified_time" content="2021-10-23T03:52:43.956Z">
+<meta property="article:author" content="JasonChio">
+<meta property="article:tag" content="教程">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="游戏">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.961110.xyz/images/2021/10/23/GTAV.jpg"><link rel="shortcut icon" href="https://blog.961110.xyz/images/favicon.png"><link rel="canonical" href="https://blog.961110.xyz/posts/17578"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"本博文距离上次更新已有","messageNext":"天，文中内容可能会过期，请自行辨别或联系博主。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '如何搭建 GTA 5 私服 - FiveM 的搭建',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-10-23 11:52:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/css/iconfont.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://blog.961110.xyz/images/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/gallery"><i class="fa-fw fas fa-images"></i><span> 图库</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://images.961110.xyz/images/2021/10/23/GTAV.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Jason's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/gallery"><i class="fa-fw fas fa-images"></i><span> 图库</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">如何搭建 GTA 5 私服 - FiveM 的搭建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-10-23T03:25:00.000Z" title="发表于 2021-10-23 11:25:00">2021-10-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-10-23T03:52:43.956Z" title="更新于 2021-10-23 11:52:43">2021-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%99%E7%A8%8B/">教程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="如何搭建 GTA 5 私服 - FiveM 的搭建"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>原文地址 <a target="_blank" rel="noopener" href="https://leif.fun/articles/2019/11/14/1573715853549.html">leif.fun</a></p>
+</blockquote>
+<p>打开官网（<a target="_blank" rel="noopener" href="https://fivem.net.cn/">中</a> <a target="_blank" rel="noopener" href="https://fivem.net/">英</a>文皆可），点击 _下载服务端 (非商业)_，如图所示<br><img src="https://img.hacpai.com/file/2019/11/image-29f540e4.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+<p>网页跳转到官方说明文档<br><img src="https://img.hacpai.com/file/2019/11/image-2949be7b.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+<p>该说明文档提供了安装在 Windows 和 Linux 上的方法，下面逐一介绍。</p>
+<h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><h3 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件:"></a>前提条件:</h3><p>1.<a target="_blank" rel="noopener" href="https://aka.ms/vs/16/release/VC_redist.x64.exe">Visual C++ Redistributable 2019</a></p>
+<p>2.<a target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git</a></p>
+<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><ol>
+<li><p>创建新文件夹为<code>D:\FxServer</code><br><img src="https://img.hacpai.com/file/2019/11/image-863a8272.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+</li>
+<li><p>下载最新 Windows 端服务器文件：<a target="_blank" rel="noopener" href="https://runtime.fivem.net/artifacts/fivem/build_server_windows/master/">artifacts server</a></p>
+</li>
+</ol>
+<p><img src="https://img.hacpai.com/file/2019/11/image-579d6bad.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+<ol start="3">
+<li><p>解压下载的服务器文件到<code>FxServer</code>文件夹中<br><img src="https://img.hacpai.com/file/2019/11/image-5d5a8984.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+</li>
+<li><p>克隆 <a target="_blank" rel="noopener" href="https://github.com/citizenfx/cfx-server-data">cfx-server-data</a> 到<code>D:\FxServer</code>中，并重名名为<code>server-data</code>，且与服务器文件夹<code>server</code>同级. 命令：<code>git clone https://github.com/citizenfx/cfx-server-data.git server-data</code><br><img src="https://img.hacpai.com/file/2019/11/image-1a91e8d5.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+</li>
+</ol>
+<p><img src="https://img.hacpai.com/file/2019/11/image-5f964c0d.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+<ol start="5">
+<li>在<code>server-data</code>文件夹下创建<code>server.cfg</code>配置文件，文件内容来自 <a target="_blank" rel="noopener" href="https://docs.fivem.net/server-manual/setting-up-a-server/#servercfgexample">example server.cfg</a>, 内容如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Only change the IP if you&#x27;re using a server with multiple network interfaces, otherwise change the port only.</span><br><span class="line">endpoint_add_tcp &quot;0.0.0.0:30120&quot;</span><br><span class="line">endpoint_add_udp &quot;0.0.0.0:30120&quot;</span><br><span class="line"></span><br><span class="line"># These resources will start by default.</span><br><span class="line">ensure mapmanager</span><br><span class="line">ensure chat</span><br><span class="line">ensure spawnmanager</span><br><span class="line">ensure sessionmanager</span><br><span class="line">ensure fivem</span><br><span class="line">ensure hardcap</span><br><span class="line">ensure rconlog</span><br><span class="line">ensure scoreboard</span><br><span class="line"></span><br><span class="line"># This allows players to use scripthook-based plugins such as the legacy Lambda Menu.</span><br><span class="line"># Set this to 1 to allow scripthook. Do note that this does _not_ guarantee players won&#x27;t be able to use external plugins.</span><br><span class="line">sv_scriptHookAllowed 0</span><br><span class="line"></span><br><span class="line"># Uncomment this and set a password to enable RCON. Make sure to change the password - it should look like rcon_password &quot;YOURPASSWORD&quot;</span><br><span class="line">#rcon_password &quot;&quot;</span><br><span class="line"></span><br><span class="line"># A comma-separated list of tags for your server.</span><br><span class="line"># For example:</span><br><span class="line"># - sets tags &quot;drifting, cars, racing&quot;</span><br><span class="line"># Or:</span><br><span class="line"># - sets tags &quot;roleplay, military, tanks&quot;</span><br><span class="line">sets tags &quot;default&quot;</span><br><span class="line"></span><br><span class="line"># A valid locale identifier for your server&#x27;s primary language.</span><br><span class="line"># For example &quot;en-US&quot;, &quot;fr-CA&quot;, &quot;nl-NL&quot;, &quot;de-DE&quot;, &quot;en-GB&quot;, &quot;pt-BR&quot;</span><br><span class="line">sets locale &quot;root-AQ&quot; </span><br><span class="line"># please DO replace root-AQ on the line ABOVE with a real language! :)</span><br><span class="line"></span><br><span class="line"># Set an optional server info and connecting banner image url.</span><br><span class="line"># Size doesn&#x27;t matter, any banner sized image will be fine.</span><br><span class="line">#sets banner_detail &quot;https://url.to/image.png&quot;</span><br><span class="line">#sets banner_connecting &quot;https://url.to/image.png&quot;</span><br><span class="line"></span><br><span class="line"># Set your server&#x27;s hostname</span><br><span class="line">sv_hostname &quot;FXServer, but unconfigured&quot;</span><br><span class="line"></span><br><span class="line"># Nested configs!</span><br><span class="line">#exec server_internal.cfg</span><br><span class="line"></span><br><span class="line"># Loading a server icon (96x96 PNG file)</span><br><span class="line">#load_server_icon myLogo.png</span><br><span class="line"></span><br><span class="line"># convars which can be used in scripts</span><br><span class="line">set temp_convar &quot;hey world!&quot;</span><br><span class="line"></span><br><span class="line"># Uncomment this line if you do not want your server to be listed in the server browser.</span><br><span class="line"># Do not edit it if you *do* want your server listed.</span><br><span class="line">#sv_master1 &quot;&quot;</span><br><span class="line"></span><br><span class="line"># Add system admins</span><br><span class="line">add_ace group.admin command allow # allow all commands</span><br><span class="line">add_ace group.admin command.quit deny # but don&#x27;t allow quit</span><br><span class="line">add_principal identifier.fivem:1 group.admin # add the admin to the group</span><br><span class="line"></span><br><span class="line"># Hide player endpoints in external log output.</span><br><span class="line">sv_endpointprivacy true</span><br><span class="line"></span><br><span class="line"># Server player slot limit (must be between 1 and 32, unless using OneSync)</span><br><span class="line">sv_maxclients 32</span><br><span class="line"></span><br><span class="line"># Steam Web API key, if you want to use Steam authentication (https://steamcommunity.com/dev/apikey)</span><br><span class="line"># -&gt; replace &quot;&quot; with the key</span><br><span class="line">set steam_webApiKey &quot;&quot;</span><br><span class="line"></span><br><span class="line"># License key for your server (https://keymaster.fivem.net)</span><br><span class="line">sv_licenseKey changeme</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>中文解释：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 一般情况下不用修改!</span><br><span class="line"># 只有使用多个服务器协议的时候才需要更改。默认的TCP和UDP端口为30120</span><br><span class="line">endpoint_add_tcp &quot;0.0.0.0:30120&quot;</span><br><span class="line">endpoint_add_udp &quot;0.0.0.0:30120&quot;</span><br><span class="line"></span><br><span class="line"># 默认启动资源。</span><br><span class="line">start mapmanager</span><br><span class="line">start chat</span><br><span class="line">start spawnmanager</span><br><span class="line">start sessionmanager</span><br><span class="line">start fivem</span><br><span class="line">start hardcap</span><br><span class="line">start rconlog</span><br><span class="line">start scoreboard</span><br><span class="line">start playernames</span><br><span class="line"></span><br><span class="line"># 允许玩家使用scripthook挂载的修改器，例如lambda菜单。</span><br><span class="line"># 设置为0可以禁用。</span><br><span class="line">sv_scriptHookAllowed 1</span><br><span class="line"></span><br><span class="line"># 取消前面的#可以启动RCON，记住你更改的密码。</span><br><span class="line">#rcon_password changeme			#一般用不到</span><br><span class="line"></span><br><span class="line"># 服务器标签，中间用逗号隔开</span><br><span class="line"># 例如：</span><br><span class="line"># - sets tags &quot;drifting, cars, racing&quot;</span><br><span class="line"># 或者：</span><br><span class="line"># - sets tags &quot;roleplay, military, tanks&quot;</span><br><span class="line">sets tags &quot;default&quot;</span><br><span class="line"></span><br><span class="line"># 设置服务器横幅或者链接横幅的URL</span><br><span class="line"># 大小没有限制，任何图像都可以.</span><br><span class="line">#sets banner_detail &quot;http://url.to/image.png&quot;</span><br><span class="line">#sets banner_connecting &quot;http://url.to/image.png&quot;</span><br><span class="line"></span><br><span class="line"># 设置服务器名称</span><br><span class="line">sv_hostname &quot;My new FXServer!&quot;</span><br><span class="line"></span><br><span class="line"># 嵌套配置！一般不改。</span><br><span class="line">#exec server_internal.cfg</span><br><span class="line"></span><br><span class="line"># 服务器LOGO图标 (96x96 PNG文件)</span><br><span class="line">#load_server_icon myLogo.png</span><br><span class="line"></span><br><span class="line"># 可以在脚本中使用的封面。</span><br><span class="line">set temp_convar &quot;hey world!&quot;</span><br><span class="line"></span><br><span class="line"># #如果你不想服务器显示在FiveM网页服务器列表，可以把#号删掉。</span><br><span class="line">#sv_master1 &quot;&quot;</span><br><span class="line"></span><br><span class="line"># 只能让Steam或者第三方运营商进入你的FiveM服务器?</span><br><span class="line"># 不要忘记Social Club也是第三方提供商!</span><br><span class="line"># 一般不改</span><br><span class="line">#sv_authMaxVariance 1</span><br><span class="line">#sv_authMinTrust 5</span><br><span class="line"></span><br><span class="line"># 添加系统管理员。</span><br><span class="line">add_ace group.admin command allow # allow all commands</span><br><span class="line">add_ace group.admin command.quit deny # but don&#x27;t allow quit</span><br><span class="line">add_principal identifier.steam:1 group.admin # add the admin to the group</span><br><span class="line"></span><br><span class="line"># 在外部输出日志上不显示玩家的信息。</span><br><span class="line">sv_endpointprivacy true</span><br><span class="line"></span><br><span class="line"># 服务器人数设置 (必须在 1 到 32)</span><br><span class="line">sv_maxclients 32</span><br><span class="line"></span><br><span class="line"># 服务器密钥 (https://keymaster.fivem.net)</span><br><span class="line">sv_licenseKey changeme</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>需要修改的几项有：<br>_sv_hostname_：服务器名称，随便写<br>_load_server_icon_：服务器列表显示的图标，去掉 #表示开启，自定义图片必须是 96x96 分辨率的 png 图片而且放在<code>server-data</code>目录中与配置文件同级目录<br><em>add_principal identifier.steam</em>: 根据注册的账号 ID 添加管理员</p>
+</blockquote>
+<ol start="6">
+<li><p>去 <a target="_blank" rel="noopener" href="https://forum.fivem.net/">FiveM 论坛</a>注册账户</p>
+</li>
+<li><p>再去获取<a target="_blank" rel="noopener" href="https://keymaster.fivem.net/">服务器密钥</a>（序列号申请次数无上限）<br><img src="https://img.hacpai.com/file/2019/11/image-4d7563f5.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+</li>
+</ol>
+<p><img src="https://img.hacpai.com/file/2019/11/image-f00d3b0f.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+<ol start="8">
+<li><p>申请序列号之后将<code>server.cfg</code>配置文件最后一项的<code>changeme</code>部分替换成上一步申请的序列号即可<br><img src="https://img.hacpai.com/file/2019/11/image-f0df0149.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+</li>
+<li><p>打开终端，输入下面两句命令即可启动 FiveM 服务器：</p>
+</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd  /d D:\FXServer\server-data</span><br><span class="line">D:\FXServer\server\run.cmd +exec server.cfg</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.hacpai.com/file/2019/11/image-92cad1ac.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+<blockquote>
+<p>注意：若觉得每次启动服务器麻烦，可以新建一个 bat 文件，将上述两句命令粘贴进去，每次启动服务器的时候双击 bat 文件即可</p>
+</blockquote>
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><p>由于 Linux 搭建方法与 Windows 大同小异，故整理了一个自动化部署脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#下载服务器文件</span><br><span class="line">wget https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/1688-c814f804e64c28952269bc5abbac92d7c956f844/fx.tar.xz</span><br><span class="line"></span><br><span class="line">#下载资源文件</span><br><span class="line">git clone https://github.com/citizenfx/cfx-server-data.git server-data</span><br><span class="line"></span><br><span class="line">#创建文件夹</span><br><span class="line">mkdir -p /usr/local/src/FiveM/server</span><br><span class="line"></span><br><span class="line">#解压服务器文件到指定文件夹</span><br><span class="line">tar -xf fx.tar.xz -C /usr/local/src/FiveM/server</span><br><span class="line"></span><br><span class="line">#复制资源文件到指定文件夹</span><br><span class="line">cp -r server-data /usr/local/src/FiveM/</span><br><span class="line"></span><br><span class="line">#创建配置文件</span><br><span class="line">cat &lt;&lt;EOF &gt;/usr/local/src/FiveM/server-data/server.cfg</span><br><span class="line"># Only change the IP if you&#x27;re using a server with multiple network interfaces, otherwise change the port only.</span><br><span class="line">endpoint_add_tcp &quot;0.0.0.0:30120&quot;</span><br><span class="line">endpoint_add_udp &quot;0.0.0.0:30120&quot;</span><br><span class="line"></span><br><span class="line"># These resources will start by default.</span><br><span class="line">ensure mapmanager</span><br><span class="line">ensure chat</span><br><span class="line">ensure spawnmanager</span><br><span class="line">ensure sessionmanager</span><br><span class="line">ensure fivem</span><br><span class="line">ensure hardcap</span><br><span class="line">ensure rconlog</span><br><span class="line">ensure scoreboard</span><br><span class="line"></span><br><span class="line"># This allows players to use scripthook-based plugins such as the legacy Lambda Menu.</span><br><span class="line"># Set this to 1 to allow scripthook. Do note that this does _not_ guarantee players won&#x27;t be able to use external plugins.</span><br><span class="line">sv_scriptHookAllowed 0</span><br><span class="line"></span><br><span class="line"># Uncomment this and set a password to enable RCON. Make sure to change the password - it should look like rcon_password &quot;YOURPASSWORD&quot;</span><br><span class="line">#rcon_password &quot;&quot;</span><br><span class="line"></span><br><span class="line"># A comma-separated list of tags for your server.</span><br><span class="line"># For example:</span><br><span class="line"># - sets tags &quot;drifting, cars, racing&quot;</span><br><span class="line"># Or:</span><br><span class="line"># - sets tags &quot;roleplay, military, tanks&quot;</span><br><span class="line">sets tags &quot;default&quot;</span><br><span class="line"></span><br><span class="line"># A valid locale identifier for your server&#x27;s primary language.</span><br><span class="line"># For example &quot;en-US&quot;, &quot;fr-CA&quot;, &quot;nl-NL&quot;, &quot;de-DE&quot;, &quot;en-GB&quot;, &quot;pt-BR&quot;</span><br><span class="line">sets locale &quot;root-AQ&quot; </span><br><span class="line"># please DO replace root-AQ on the line ABOVE with a real language! :)</span><br><span class="line"></span><br><span class="line"># Set an optional server info and connecting banner image url.</span><br><span class="line"># Size doesn&#x27;t matter, any banner sized image will be fine.</span><br><span class="line">#sets banner_detail &quot;https://url.to/image.png&quot;</span><br><span class="line">#sets banner_connecting &quot;https://url.to/image.png&quot;</span><br><span class="line"></span><br><span class="line"># Set your server&#x27;s hostname</span><br><span class="line">sv_hostname &quot;FXServer, but unconfigured&quot;</span><br><span class="line"></span><br><span class="line"># Nested configs!</span><br><span class="line">#exec server_internal.cfg</span><br><span class="line"></span><br><span class="line"># Loading a server icon (96x96 PNG file)</span><br><span class="line">#load_server_icon myLogo.png</span><br><span class="line"></span><br><span class="line"># convars which can be used in scripts</span><br><span class="line">set temp_convar &quot;hey world!&quot;</span><br><span class="line"></span><br><span class="line"># Uncomment this line if you do not want your server to be listed in the server browser.</span><br><span class="line"># Do not edit it if you *do* want your server listed.</span><br><span class="line">#sv_master1 &quot;&quot;</span><br><span class="line"></span><br><span class="line"># Add system admins</span><br><span class="line">add_ace group.admin command allow # allow all commands</span><br><span class="line">add_ace group.admin command.quit deny # but don&#x27;t allow quit</span><br><span class="line">add_principal identifier.fivem:1 group.admin # add the admin to the group</span><br><span class="line"></span><br><span class="line"># Hide player endpoints in external log output.</span><br><span class="line">sv_endpointprivacy true</span><br><span class="line"></span><br><span class="line"># Server player slot limit (must be between 1 and 32, unless using OneSync)</span><br><span class="line">sv_maxclients 32</span><br><span class="line"></span><br><span class="line"># Steam Web API key, if you want to use Steam authentication (https://steamcommunity.com/dev/apikey)</span><br><span class="line"># -&gt; replace &quot;&quot; with the key</span><br><span class="line">set steam_webApiKey &quot;&quot;</span><br><span class="line"></span><br><span class="line"># License key for your server (https://keymaster.fivem.net)</span><br><span class="line">sv_licenseKey changeme</span><br><span class="line"></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>将脚本中的<code>changeme</code>替换成服务器密钥即可部署</p>
+<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><p>使用如下命令启动：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /usr/local/src/FiveM/server-data </span><br><span class="line">/usr/local/src/FiveM/server/run.sh +exec server.cfg</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>切记，不可用<code>/usr/local/src/FiveM/server/run.sh +exec /usr/local/src/FiveM/server-data/server.cfg</code>命令启动，会失败，具体原因未知</p>
+</blockquote>
+<h3 id="开机自启"><a href="#开机自启" class="headerlink" title="开机自启"></a>开机自启</h3><p>为了做到开机自启，我采用了 Supervisor 的方式 (使用 systemctl 方式会无限重启，原因未知)：<br>先创建一个启动服务的脚本<code>/usr/local/src/FiveM/start.sh</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /usr/local/src/FiveM/server-data &amp;&amp; /usr/local/src/FiveM/server/run.sh +exec server.cfg</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后在 Supervisor 的配置文件夹<code>/etc/supervisor/conf.d/</code>中新建 FiveM 的启动文件<code>fivem.conf</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[program:fivem]</span><br><span class="line">command=/usr/bin/bash /usr/local/src/FiveM/start.sh</span><br><span class="line">directory=/usr/local/src/FiveM</span><br><span class="line">user=root</span><br><span class="line">stdout_logfile=/var/log/fivem.log</span><br><span class="line">autostart=true</span><br><span class="line">autorestart=true</span><br><span class="line">redirect_stderr=true</span><br><span class="line">stopsignal=QUIT</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>最后使用<code>supervisorctl reload</code>，选择<code>y</code>即可开机自启 FiveM 服务</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@centos ~]# supervisorctl status</span><br><span class="line">fivem                            RUNNING   pid 3316, uptime 5:24:59</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>实时日志如下 (每三分钟发一次心跳)：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@centos ~]# tail /var/log/fivem.log -f</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line">Sending heartbeat to live-internal.fivem.net:30110</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>连接情况 (若是云服务器或者是非本机的电脑需要添加 30120 的 TCP 和 UDP 入站规则)：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@VM_0_7_centos ~]# lsof -i:30120</span><br><span class="line">COMMAND    PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME</span><br><span class="line">ld-musl-x 3317 root   28u  IPv4 36571478      0t0  TCP VM_0_7_centos:30120-&gt;150.116.85.124:55130 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   31u  IPv4 36470180      0t0  TCP *:30120 (LISTEN)</span><br><span class="line">ld-musl-x 3317 root   33u  IPv6 36470181      0t0  UDP *:30120</span><br><span class="line">ld-musl-x 3317 root   35u  IPv4 36476879      0t0  TCP VM_0_7_centos:30120-&gt;201.75.45.121:52624 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   36u  IPv4 36477004      0t0  TCP VM_0_7_centos:30120-&gt;67.166.27.29:57882 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   37u  IPv4 36509773      0t0  TCP VM_0_7_centos:30120-&gt;adria.kvarteto.net:50084 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   38u  IPv4 36483951      0t0  TCP VM_0_7_centos:30120-&gt;cable-188-2-205-27.dynamic.sbb.rs:52447 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   39u  IPv4 36484090      0t0  TCP VM_0_7_centos:30120-&gt;49.230.56.194:50631 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   40u  IPv4 36571801      0t0  TCP VM_0_7_centos:30120-&gt;176.148.208.253:58608 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   41u  IPv4 36484632      0t0  TCP VM_0_7_centos:30120-&gt;179.219.232.155:55005 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   42u  IPv4 36488632      0t0  TCP VM_0_7_centos:30120-&gt;client-201.230.158.233.speedy.net.pe:13723 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   43u  IPv4 36489318      0t0  TCP VM_0_7_centos:30120-&gt;112.201.139.65.pldt.net:ema-sent-lm (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   44u  IPv4 36504202      0t0  TCP VM_0_7_centos:30120-&gt;cpc69049-oxfd25-2-0-cust839.4-3.cable.virginm.net:55972 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   45u  IPv4 36509900      0t0  TCP VM_0_7_centos:30120-&gt;106.203.63.106:64732 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   46u  IPv4 36490560      0t0  TCP VM_0_7_centos:30120-&gt;177.155.219.25:58726 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   47u  IPv4 36510686      0t0  TCP VM_0_7_centos:30120-&gt;187.21.113.230:51463 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   48u  IPv4 36509557      0t0  TCP VM_0_7_centos:30120-&gt;pc-252-52-100-190.cm.vtr.net:50904 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   49u  IPv4 36492966      0t0  TCP VM_0_7_centos:30120-&gt;170.254.133.248:4657 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   50u  IPv4 36512199      0t0  TCP VM_0_7_centos:30120-&gt;93-86-107-145.dynamic.isp.telekom.rs:58530 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   51u  IPv4 36523715      0t0  TCP VM_0_7_centos:30120-&gt;c-71-193-90-215.hsd1.mn.comcast.net:64846 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   52u  IPv4 36515098      0t0  TCP VM_0_7_centos:30120-&gt;37.236.124.65:60517 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   53u  IPv4 36524821      0t0  TCP VM_0_7_centos:30120-&gt;ppp-223-24-144-28.revip6.asianet.co.th:11693 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   54u  IPv4 36522366      0t0  TCP VM_0_7_centos:30120-&gt;c-98-192-236-150.hsd1.de.comcast.net:58986 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   55u  IPv4 36522517      0t0  TCP VM_0_7_centos:30120-&gt;190.200.255.39:17832 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   56u  IPv4 36525992      0t0  TCP VM_0_7_centos:30120-&gt;cm-27-145-135-149.revip12.asianet.co.th:52631 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   57u  IPv4 36531724      0t0  TCP VM_0_7_centos:30120-&gt;73.126.70.158:50722 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   58u  IPv4 36555357      0t0  TCP VM_0_7_centos:30120-&gt;cpc139088-jarr15-2-0-cust109.16-2.cable.virginm.net:52928 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   59u  IPv4 36531740      0t0  TCP VM_0_7_centos:30120-&gt;c-174-50-61-97.hsd1.la.comcast.net:52188 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   60u  IPv4 36551137      0t0  TCP VM_0_7_centos:30120-&gt;187.21.84.137:65142 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   61u  IPv4 36555172      0t0  TCP VM_0_7_centos:30120-&gt;77.202.162.69:54845 (ESTABLISHED)</span><br><span class="line">ld-musl-x 3317 root   62u  IPv4 36563973      0t0  TCP VM_0_7_centos:30120-&gt;199.199.246.200:63485 (ESTABLISHED)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：因为我是放在云服务器上的，所以刚搭建完没多久就有客户端连接上来了</p>
+</blockquote>
+<p>资源占用情况：<br><img src="https://img.hacpai.com/file/2019/11/image-cfe46be4.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">JasonChio</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.961110.xyz/posts/17578.html">https://blog.961110.xyz/posts/17578.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.961110.xyz" target="_blank">Jason's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%99%E7%A8%8B/">教程</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E6%B8%B8%E6%88%8F/">游戏</a></div><div class="post_share"><div class="social-share" data-image="https://images.961110.xyz/images/2021/10/23/GTAV.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/29824.html"><img class="prev-cover" src="https://images.961110.xyz/images/2021/10/23/Raspberry-Pi-4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">使用 Cockpit 管理你的树莓派</div></div></a></div><div class="next-post pull-right"><a href="/posts/48985.html"><img class="next-cover" src="https://images.961110.xyz/images/2021/10/23/Raspberry-Pi-4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">树莓派（raspberry）启用 root 账户</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/2965.html" title="Linux通过dd命令备份及还原SD卡"><img class="cover" src="https://images.961110.xyz/images/2021/10/20/Cover.gif" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-21</div><div class="title">Linux通过dd命令备份及还原SD卡</div></div></a></div><div><a href="/posts/44617.html" title="MAC使用VNC连接Centos7服务器"><img class="cover" src="https://images.961110.xyz/images/2021/10/20/Linux.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-20</div><div class="title">MAC使用VNC连接Centos7服务器</div></div></a></div><div><a href="/posts/36360.html" title="Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册"><img class="cover" src="https://blog.961110.xyz/images/default_top_img.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-20</div><div class="title">Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册</div></div></a></div><div><a href="/posts/3295.html" title="zsh终端配置"><img class="cover" src="https://images.961110.xyz/images/2021/10/22/oh-my-zsh.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-22</div><div class="title">zsh终端配置</div></div></a></div><div><a href="/posts/48985.html" title="树莓派（raspberry）启用 root 账户"><img class="cover" src="https://images.961110.xyz/images/2021/10/23/Raspberry-Pi-4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-23</div><div class="title">树莓派（raspberry）启用 root 账户</div></div></a></div><div><a href="/posts/59454.html" title="树莓派4B启动配置"><img class="cover" src="https://images.961110.xyz/images/2021/10/20/Cover.gif" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-22</div><div class="title">树莓派4B启动配置</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://blog.961110.xyz/images/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">JasonChio</div><div class="author-info__description">让琐碎的记录变为成长的基石</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" href="https://blog.961110.xyz/images/WeChat-QRCode.jpg"><i class="fab fa-weixin"></i><span>等一个小红点</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/jasonchio-cn" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:zyb389120217@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://blog.961110.xyz/images/WeChat-QRCode.jpg" target="_blank" title="WeChat"><i class="fab fa-weixin"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=389120217&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">本博客正处于测试阶段，如有问题或建议请联系博主，谢谢！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows"><span class="toc-number">1.</span> <span class="toc-text">Windows</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">前提条件:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.2.</span> <span class="toc-text">安装步骤</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux"><span class="toc-number">2.</span> <span class="toc-text">Linux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.1.</span> <span class="toc-text">启动服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF"><span class="toc-number">2.2.</span> <span class="toc-text">开机自启</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/29824.html" title="使用 Cockpit 管理你的树莓派"><img src="https://images.961110.xyz/images/2021/10/23/Raspberry-Pi-4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用 Cockpit 管理你的树莓派"/></a><div class="content"><a class="title" href="/posts/29824.html" title="使用 Cockpit 管理你的树莓派">使用 Cockpit 管理你的树莓派</a><time datetime="2021-10-23T03:55:00.000Z" title="发表于 2021-10-23 11:55:00">2021-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/17578.html" title="如何搭建 GTA 5 私服 - FiveM 的搭建"><img src="https://images.961110.xyz/images/2021/10/23/GTAV.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何搭建 GTA 5 私服 - FiveM 的搭建"/></a><div class="content"><a class="title" href="/posts/17578.html" title="如何搭建 GTA 5 私服 - FiveM 的搭建">如何搭建 GTA 5 私服 - FiveM 的搭建</a><time datetime="2021-10-23T03:25:00.000Z" title="发表于 2021-10-23 11:25:00">2021-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/48985.html" title="树莓派（raspberry）启用 root 账户"><img src="https://images.961110.xyz/images/2021/10/23/Raspberry-Pi-4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="树莓派（raspberry）启用 root 账户"/></a><div class="content"><a class="title" href="/posts/48985.html" title="树莓派（raspberry）启用 root 账户">树莓派（raspberry）启用 root 账户</a><time datetime="2021-10-23T03:08:00.000Z" title="发表于 2021-10-23 11:08:00">2021-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/32391.html" title="树莓派安装字体"><img src="https://images.961110.xyz/images/2021/10/23/Raspberry-Pi-4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="树莓派安装字体"/></a><div class="content"><a class="title" href="/posts/32391.html" title="树莓派安装字体">树莓派安装字体</a><time datetime="2021-10-23T03:08:00.000Z" title="发表于 2021-10-23 11:08:00">2021-10-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3295.html" title="zsh终端配置"><img src="https://images.961110.xyz/images/2021/10/22/oh-my-zsh.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="zsh终端配置"/></a><div class="content"><a class="title" href="/posts/3295.html" title="zsh终端配置">zsh终端配置</a><time datetime="2021-10-22T04:54:00.000Z" title="发表于 2021-10-22 12:54:00">2021-10-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By JasonChio</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.16/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?jasonchio-cn";
+            var git_color =['#ebedf0', '#f0fff4', '#dcffe4', '#bef5cb', '#85e89d', '#34d058', '#28a745', '#22863a', '#176f2c', '#165c26', '#144620'];
+            var git_user ="jasonchio-cn";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style>undefined</style><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/tzy13755126023/BLOG_SOURCE/theme_f/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.js"></script><!-- hexo injector body_end end --></body></html>
