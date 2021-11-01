@@ -1,0 +1,362 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>编译docker engine源码的两种方法以及遇到的问题 | Jason's Blog</title><meta name="keywords" content="笔记,毕设,Docker,Docker源码,编译"><meta name="author" content="JasonChio"><meta name="copyright" content="JasonChio"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前情梗概Docker是前后端分离的架构，社区版本的Docker-CE前端部分由docker&#x2F;cli: The Docker CLI维护，后端部分由moby&#x2F;moby: Moby Project维护。从Docker 20.10 release版本开始，Docker Engine 和 Docker CLI单独从各自的项目编译。  这次Docker Engine源码编译选择的是19.03的版本，通过两种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译docker engine源码的两种方法以及遇到的问题">
+<meta property="og:url" content="https://blog.961110.xyz/posts/21885.html">
+<meta property="og:site_name" content="Jason&#39;s Blog">
+<meta property="og:description" content="前情梗概Docker是前后端分离的架构，社区版本的Docker-CE前端部分由docker&#x2F;cli: The Docker CLI维护，后端部分由moby&#x2F;moby: Moby Project维护。从Docker 20.10 release版本开始，Docker Engine 和 Docker CLI单独从各自的项目编译。  这次Docker Engine源码编译选择的是19.03的版本，通过两种">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.961110.xyz/images/2021/10/30/docker-ce-overview.jpg">
+<meta property="article:published_time" content="2021-11-01T09:22:00.000Z">
+<meta property="article:modified_time" content="2021-11-01T09:24:15.750Z">
+<meta property="article:author" content="JasonChio">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="毕设">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Docker源码编译">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images.961110.xyz/images/2021/10/30/docker-ce-overview.jpg"><link rel="shortcut icon" href="https://blog.961110.xyz/images/favicon.png"><link rel="canonical" href="https://blog.961110.xyz/posts/21885"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"本博文距离上次更新已有","messageNext":"天，文中内容可能会过期，请自行辨别或联系博主。"},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '编译docker engine源码的两种方法以及遇到的问题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-11-01 17:24:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/css/iconfont.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://blog.961110.xyz/images/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/gallery"><i class="fa-fw fas fa-images"></i><span> 图库</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://images.961110.xyz/images/2021/10/30/docker-ce-overview.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Jason's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/gallery"><i class="fa-fw fas fa-images"></i><span> 图库</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">编译docker engine源码的两种方法以及遇到的问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-01T09:22:00.000Z" title="发表于 2021-11-01 17:22:00">2021-11-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-01T09:24:15.750Z" title="更新于 2021-11-01 17:24:15">2021-11-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%AF%95%E8%AE%BE/">毕设</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="编译docker engine源码的两种方法以及遇到的问题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/posts/21885.html#post-comment"><span id="twikoo-count"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前情梗概"><a href="#前情梗概" class="headerlink" title="前情梗概"></a>前情梗概</h2><p>Docker是前后端分离的架构，社区版本的Docker-CE前端部分由<a target="_blank" rel="noopener" href="https://github.com/docker/cli">docker/cli: The Docker CLI</a>维护，后端部分由<a target="_blank" rel="noopener" href="https://github.com/moby/moby">moby/moby: Moby Project</a>维护。从Docker 20.10 release版本开始，Docker Engine 和 Docker CLI单独从各自的项目编译。</p>
+<p><img src="https://images.961110.xyz/images/2021/10/30/docker-ce-overview.jpg" alt="docker-ce-overview"></p>
+<p>这次Docker Engine源码编译选择的是19.03的版本，通过两种方式进行了尝试：</p>
+<ol>
+<li>通过官方指定方式，使用docker-dev镜像在容器中编译；</li>
+<li>本地构建编译环境，在本机中编译。</li>
+</ol>
+<h2 id="使用docker-dev镜像在容器中编译"><a href="#使用docker-dev镜像在容器中编译" class="headerlink" title="使用docker-dev镜像在容器中编译"></a>使用docker-dev镜像在容器中编译</h2><h3 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h3><p>因为是要在容器中编译，所以肯定先要安装好Docker，安装步骤可以参考<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/ubuntu/">官方文档</a>或者其他教程贴。</p>
+<h3 id="克隆moby仓库并切换到相应分支"><a href="#克隆moby仓库并切换到相应分支" class="headerlink" title="克隆moby仓库并切换到相应分支"></a>克隆moby仓库并切换到相应分支</h3><p>克隆仓库</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> https://github.com/moby/moby.git</span></span><br></pre></td></tr></table></figure>
+
+<p>查看所有分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git branch -a</span></span><br><span class="line"></span><br><span class="line">* (HEAD detached at origin/19.03)</span><br><span class="line">  19.03</span><br><span class="line">  master</span><br><span class="line">  remotes/origin/1.12.x</span><br><span class="line">  remotes/origin/1.13.x</span><br><span class="line">  remotes/origin/17.03.x</span><br><span class="line">  remotes/origin/17.04.x</span><br><span class="line">  remotes/origin/17.05.x</span><br><span class="line">  remotes/origin/19.03</span><br><span class="line">  remotes/origin/20.10</span><br><span class="line">  remotes/origin/HEAD -&gt; origin/master</span><br><span class="line">  remotes/origin/docs</span><br><span class="line">  remotes/origin/master</span><br></pre></td></tr></table></figure>
+
+<p>切换到对应分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git checkout remotes/origin/19.03</span></span><br></pre></td></tr></table></figure>
+
+<p>如果想要从当前分支另起一个分支</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b dry-run-test</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -a</span></span><br><span class="line"></span><br><span class="line">* dry-run-test</span><br><span class="line">  master</span><br><span class="line">  remotes/origin/1.12.x</span><br><span class="line">  remotes/origin/1.13.x</span><br><span class="line">  remotes/origin/17.03.x</span><br><span class="line">  remotes/origin/17.04.x</span><br><span class="line">  remotes/origin/17.05.x</span><br><span class="line">  remotes/origin/19.03</span><br><span class="line">  remotes/origin/20.10</span><br><span class="line">  remotes/origin/HEAD -&gt; origin/master</span><br><span class="line">  remotes/origin/docs</span><br><span class="line">  remotes/origin/dry-run-test</span><br><span class="line">  remotes/origin/master</span><br></pre></td></tr></table></figure>
+
+<h3 id="清空所有现有镜像和容器"><a href="#清空所有现有镜像和容器" class="headerlink" title="清空所有现有镜像和容器"></a>清空所有现有镜像和容器</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker ps -a</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker system prune -a</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker images</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker rmi -f $(docker images -q -a -f dangling=<span class="literal">true</span>)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="利用Dockerfile构建docker-dev镜像"><a href="#利用Dockerfile构建docker-dev镜像" class="headerlink" title="利用Dockerfile构建docker-dev镜像"></a>利用Dockerfile构建docker-dev镜像</h3><p>安装make工具</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt-get install make</span><br></pre></td></tr></table></figure>
+
+<p>在项目根目录直接输入</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> make BIND_DIR=. shell</span></span><br></pre></td></tr></table></figure>
+
+<p>在Makefile文件中对应执行的是</p>
+<figure class="highlight makefile"><table><tr><td class="code"><pre><span class="line"><span class="section">build: bundles</span></span><br><span class="line">	<span class="variable">$(<span class="built_in">warning</span> The docker client CLI has moved to github.com/docker/cli. For a dev-test cycle involving the CLI, run:$&#123;\n&#125; DOCKER_CLI_PATH=/host/path/to/cli/binary make <span class="built_in">shell</span> $&#123;\n&#125; then change the cli <span class="built_in">and</span> compile into a binary at the same location.$&#123;\n&#125;)</span></span><br><span class="line">	DOCKER_BUILDKIT=<span class="string">&quot;$&#123;DOCKER_BUILDKIT&#125;&quot;</span> docker build --build-arg=GO_VERSION $&#123;BUILD_APT_MIRROR&#125; $&#123;DOCKER_BUILD_ARGS&#125; $&#123;DOCKER_BUILD_OPTS&#125; -t <span class="string">&quot;<span class="variable">$(DOCKER_IMAGE)</span>&quot;</span> -f <span class="string">&quot;<span class="variable">$(DOCKERFILE)</span>&quot;</span> .</span><br></pre></td></tr></table></figure>
+
+<p>大体意思是调用<code>docker build</code>依据设置的环境变量和的传入的参数遵从Dockerfile构建<code>docker-dev</code>镜像。</p>
+<p>如果构成过程没有错误的话，终端输出的末尾应该会有如下的提示</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"> =&gt; [dev  8/25] RUN update-alternatives --set iptables  /usr/sbin/iptables-legacy  || true  &amp;&amp; update-alternative  0.4s</span><br><span class="line"> =&gt; [dev  9/25] RUN pip3 install yamllint==1.16.0                                                                  5.7s</span><br><span class="line"> =&gt; [dev 10/25] COPY --from=dockercli     /build/ /usr/local/cli                                                   0.2s</span><br><span class="line"> =&gt; [dev 11/25] COPY --from=frozen-images /build/ /docker-frozen-images                                            0.7s</span><br><span class="line"> =&gt; [dev 12/25] COPY --from=swagger       /build/ /usr/local/bin/                                                  0.1s</span><br><span class="line">...</span><br><span class="line"> =&gt; [dev 22/25] COPY --from=rootlesskit   /build/ /usr/local/bin/                                                  0.1s</span><br><span class="line"> =&gt; [dev 23/25] COPY --from=vpnkit        /vpnkit /usr/local/bin/vpnkit.x86_64                                     0.2s</span><br><span class="line"> =&gt; [dev 24/25] COPY --from=proxy         /build/ /usr/local/bin/                                                  0.1s</span><br><span class="line"> =&gt; [dev 25/25] WORKDIR /go/src/github.com/docker/docker                                                           0.0s</span><br><span class="line"> =&gt; exporting to image                                                                                             7.1s</span><br><span class="line"> =&gt; =&gt; exporting layers                                                                                            7.1s</span><br><span class="line"> =&gt; =&gt; writing image sha256:1bc0901b7d2b1f958a24445ca93c73401a60e2f9e301255ea092002bb8c1c7b9                       0.0s</span><br><span class="line"> =&gt; =&gt; naming to docker.io/library/docker-dev:dry-run-test                                                         0.0s</span><br></pre></td></tr></table></figure>
+
+<p>构建完成后可以先查看一下刚刚构建出的镜像</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  ~ docker image ls -a</span><br><span class="line">REPOSITORY   TAG            IMAGE ID       CREATED      SIZE</span><br><span class="line">docker-dev   dry-run-test   1bc0901b7d2b   2 days ago   2.07GB</span><br></pre></td></tr></table></figure>
+
+<p>构建完成后也会有启动<code>docker-dev</code>的命令提示</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">docker run --rm -i --privileged  -e DOCKER_CROSSPLATFORMS -e BUILD_APT_MIRROR -e BUILDFLAGS -e KEEPBUNDLE -e DOCKER_BUILD_ARGS -e DOCKER_BUILD_GOGC -e DOCKER_BUILD_OPTS -e DOCKER_BUILD_PKGS -e DOCKER_BUILDKIT -e DOCKER_BASH_COMPLETION_PATH -e DOCKER_CLI_PATH -e DOCKER_DEBUG -e DOCKER_EXPERIMENTAL -e DOCKER_GITCOMMIT -e DOCKER_GRAPHDRIVER -e DOCKER_LDFLAGS -e DOCKER_PORT -e DOCKER_REMAP_ROOT -e DOCKER_STORAGE_OPTS -e DOCKER_TEST_HOST -e DOCKER_USERLANDPROXY -e DOCKERD_ARGS -e TEST_INTEGRATION_DIR -e TEST_SKIP_INTEGRATION -e TEST_SKIP_INTEGRATION_CLI -e TESTDEBUG -e TESTDIRS -e TESTFLAGS -e TESTFLAGS_INTEGRATION -e TESTFLAGS_INTEGRATION_CLI -e TEST_FILTER -e TIMEOUT -e VALIDATE_REPO -e VALIDATE_BRANCH -e VALIDATE_ORIGIN_BRANCH -e HTTP_PROXY -e HTTPS_PROXY -e NO_PROXY -e http_proxy -e https_proxy -e no_proxy -e VERSION -e PLATFORM -e DEFAULT_PRODUCT_LICENSE -e PRODUCT -v &quot;/home/jason/repos/moby-fork/.:/go/src/github.com/docker/docker/.&quot; -v &quot;/home/jason/repos/moby-fork/.git:/go/src/github.com/docker/docker/.git&quot; -v docker-dev-cache:/root/.cache    -t &quot;docker-dev:dry-run-test&quot; bash</span><br></pre></td></tr></table></figure>
+
+<p>进入之后，可以看一下当前目录有哪些文件</p>
+<img src="https://images.961110.xyz/images/2021/11/01/344dda91545cbed1cc59cf2daa90a848.png" alt="image-20211101111913141" style="zoom: 67%;" />
+
+<p>从镜像启动命令可以看出，实际是将主机的moby目录挂载到了当前路径。也就是说，如果在主机或者<code>docker-dev</code>中修改了代码，会同步修改。</p>
+<h3 id="docker-dev环境"><a href="#docker-dev环境" class="headerlink" title="docker-dev环境"></a>docker-dev环境</h3><h4 id="docker-version"><a href="#docker-version" class="headerlink" title="docker version"></a>docker version</h4><p>初始环境中是没有docker engine的，需要自行编译</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker# docker version</span><br><span class="line">Client:</span><br><span class="line"> Version:      17.06.2-ce</span><br><span class="line"> API version:  1.30</span><br><span class="line"> Go version:   go1.8.3</span><br><span class="line"> Git commit:   cec0b72</span><br><span class="line"> Built:        Tue Sep  5 19:57:21 2017</span><br><span class="line"> OS/Arch:      linux/amd64</span><br><span class="line"> Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</span><br></pre></td></tr></table></figure>
+
+<h4 id="go-env"><a href="#go-env" class="headerlink" title="go env"></a>go env</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@9e6c8aab5a7f:/go/src/github.com/docker/docker# go env</span><br><span class="line">GO111MODULE=&quot;off&quot;</span><br><span class="line">GOARCH=&quot;amd64&quot;</span><br><span class="line">GOBIN=&quot;&quot;</span><br><span class="line">GOCACHE=&quot;/root/.cache/go-build&quot;</span><br><span class="line">GOENV=&quot;/root/.config/go/env&quot;</span><br><span class="line">GOEXE=&quot;&quot;</span><br><span class="line">GOFLAGS=&quot;&quot;</span><br><span class="line">GOHOSTARCH=&quot;amd64&quot;</span><br><span class="line">GOHOSTOS=&quot;linux&quot;</span><br><span class="line">GONOPROXY=&quot;&quot;</span><br><span class="line">GONOSUMDB=&quot;&quot;</span><br><span class="line">GOOS=&quot;linux&quot;</span><br><span class="line">GOPATH=&quot;/go&quot;</span><br><span class="line">GOPRIVATE=&quot;&quot;</span><br><span class="line">GOPROXY=&quot;https://goproxy.cn,direct&quot;</span><br><span class="line">GOROOT=&quot;/usr/local/go&quot;</span><br><span class="line">GOSUMDB=&quot;sum.golang.org&quot;</span><br><span class="line">GOTMPDIR=&quot;&quot;</span><br><span class="line">GOTOOLDIR=&quot;/usr/local/go/pkg/tool/linux_amd64&quot;</span><br><span class="line">GCCGO=&quot;gccgo&quot;</span><br><span class="line">AR=&quot;ar&quot;</span><br><span class="line">CC=&quot;gcc&quot;</span><br><span class="line">CXX=&quot;g++&quot;</span><br><span class="line">CGO_ENABLED=&quot;1&quot;</span><br><span class="line">GOMOD=&quot;&quot;</span><br><span class="line">CGO_CFLAGS=&quot;-g -O2&quot;</span><br><span class="line">CGO_CPPFLAGS=&quot;&quot;</span><br><span class="line">CGO_CXXFLAGS=&quot;-g -O2&quot;</span><br><span class="line">CGO_FFLAGS=&quot;-g -O2&quot;</span><br><span class="line">CGO_LDFLAGS=&quot;-g -O2&quot;</span><br><span class="line">PKG_CONFIG=&quot;pkg-config&quot;</span><br><span class="line">GOGCCFLAGS=&quot;-fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=/tmp/go-build033151478=/tmp/go-build -gno-record-gcc-switches&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译docker-binary"><a href="#编译docker-binary" class="headerlink" title="编译docker binary"></a>编译docker binary</h3><h4 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker# hack/make.sh binary</span><br><span class="line"></span><br><span class="line">Removing bundles/</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">---&gt;</span><span class="bash"> Making bundle: binary (<span class="keyword">in</span> bundles/binary)</span></span><br><span class="line">Building: bundles/binary-daemon/dockerd-dev</span><br><span class="line">GOOS=&quot;&quot; GOARCH=&quot;&quot; GOARM=&quot;&quot;</span><br><span class="line">Created binary: bundles/binary-daemon/dockerd-dev</span><br><span class="line">Copying nested executables into bundles/binary-daemon</span><br><span class="line"></span><br><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker#</span><br></pre></td></tr></table></figure>
+
+<p>内容如下</p>
+<img src="https://images.961110.xyz/images/2021/11/01/binary.png" alt="image-20211101115527967" style="zoom:67%;" />
+
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>在项目目录输入<code>make install</code>，会把刚刚编译生成的各个执行文件拷贝到<code>/usr/local/bin/</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker# make install</span><br><span class="line">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</span><br><span class="line">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</span><br><span class="line">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</span><br><span class="line">Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?</span><br><span class="line">KEEPBUNDLE=1 hack/make.sh install-binary</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">---&gt;</span><span class="bash"> Making bundle: install-binary (<span class="keyword">in</span> bundles/install-binary)</span></span><br><span class="line">Installing dockerd to /usr/local/bin/</span><br><span class="line">Installing runc to /usr/local/bin/</span><br><span class="line">Installing containerd to /usr/local/bin/</span><br><span class="line">Installing ctr to /usr/local/bin/</span><br><span class="line">Installing containerd-shim to /usr/local/bin/</span><br><span class="line">Installing docker-proxy to /usr/local/bin/</span><br><span class="line">Installing docker-init to /usr/local/bin/</span><br><span class="line">Installing rootlesskit to /usr/local/bin/</span><br><span class="line">Installing rootlesskit-docker-proxy to /usr/local/bin/</span><br><span class="line">Installing dockerd-rootless.sh to /usr/local/bin/</span><br><span class="line">Installing vpnkit to /usr/local/bin/</span><br><span class="line"></span><br><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker#</span><br></pre></td></tr></table></figure>
+
+<p>输入<code>dockerd &amp;</code>在后台启动dockerd（如果想要开启debug模式的话，加一个<code>-D</code>参数），然后输入<code>docker version</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker# docker version</span><br><span class="line">DEBU[2021-11-01T04:00:11.890237855Z] Calling GET /_ping</span><br><span class="line">DEBU[2021-11-01T04:00:11.891512505Z] Calling GET /v1.30/version</span><br><span class="line">Client:</span><br><span class="line"> Version:      17.06.2-ce</span><br><span class="line"> API version:  1.30</span><br><span class="line"> Go version:   go1.8.3</span><br><span class="line"> Git commit:   cec0b72</span><br><span class="line"> Built:        Tue Sep  5 19:57:21 2017</span><br><span class="line"> OS/Arch:      linux/amd64</span><br><span class="line"></span><br><span class="line">Server:</span><br><span class="line"> Version:      dev</span><br><span class="line"> API version:  1.40 (minimum version 1.12)</span><br><span class="line"> Go version:   go1.13.15</span><br><span class="line"> Git commit:   e2b63fbe46</span><br><span class="line"> Built:        Mon Nov  1 03:53:11 2021</span><br><span class="line"> OS/Arch:      linux/amd64</span><br><span class="line"> Experimental: false</span><br><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker#</span><br></pre></td></tr></table></figure>
+
+<p>可以看到刚刚编译好的dockerd已经运行起来了，版本也是我们的dev版。</p>
+<p>可以用hello world这个检查镜像试试运行是否正常：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker run hello-world</span></span><br><span class="line"></span><br><span class="line">Unable to find image &#x27;hello-world:latest&#x27; locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">2db29710123e: Pull complete</span><br><span class="line">Digest: sha256:37a0b92b08d4919615c3ee023f7ddb068d12b8387475d64c622ac30f45c29c51</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line">INFO[2021-11-01T06:36:18.265460389Z] shim containerd-shim started                  address=&quot;unix:///run/containerd/s/92a66bf121c2fc3d2061a0e56a70ac73c148421caab878528d96b31a6cf23b24&quot; debug=false pid=912</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">INFO[2021-11-01T06:36:18.494924873Z] shim reaped                                   id=7f500aadff4b87ef747825e95a182bc00fe033dcacb4f976aa3b4fd8db98cea4</span><br><span class="line">INFO[2021-11-01T06:36:18.505731593Z] ignoring event                                module=libcontainerd namespace=moby topic=/tasks/delete type=&quot;*events.TaskDelete&quot;</span><br><span class="line">root@c17a2f34853b:/go/src/github.com/docker/docker#</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="使用docker-dev镜像编译遇到的问题"><a href="#使用docker-dev镜像编译遇到的问题" class="headerlink" title="使用docker-dev镜像编译遇到的问题"></a>使用docker-dev镜像编译遇到的问题</h3><p>在国内最主要的就是网络问题，其他的都好解决。</p>
+<h4 id="从github克隆项目超时"><a href="#从github克隆项目超时" class="headerlink" title="从github克隆项目超时"></a>从github克隆项目超时</h4><p>终端输出没有记录到，不过这个问题和下面一个问题相同，都是因为被墙的原因。</p>
+<h4 id="go-install超时"><a href="#go-install超时" class="headerlink" title="go install超时"></a>go install超时</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  moby git:(master) ✗ make build</span><br><span class="line">docker build  --build-arg=GO_VERSION  -f &quot;Dockerfile&quot; --target=final   -t &quot;docker-dev&quot; .</span><br><span class="line">[+] Building 873.7s (41/75)</span><br><span class="line">...</span><br><span class="line"> =&gt; CANCELED [dockercli 2/2] RUN --mount=type=cache,target=/root/.cache/go-build     --mount=type=cache,target=/  24.6s</span><br><span class="line">------</span><br><span class="line"><span class="meta"> &gt;</span><span class="bash"> [vndr 1/1] RUN --mount=<span class="built_in">type</span>=cache,target=/root/.cache/go-build     --mount=<span class="built_in">type</span>=cache,target=/go/pkg/mod         GOBIN=/build/ GO111MODULE=on go install <span class="string">&quot;github.com/LK4D4/vndr@v0.1.2&quot;</span>      &amp;&amp; /build/vndr --<span class="built_in">help</span>:</span></span><br><span class="line"><span class="meta"> &gt;</span><span class="bash"> <span class="comment">#49 24.73 go install: github.com/LK4D4/vndr@v0.1.2: github.com/LK4D4/vndr@v0.1.2: Get &quot;https://proxy.golang.org/github.com/%21l%21k4%21d4/vndr/@v/v0.1.2.info&quot;: dial tcp 172.217.160.81:443: connect: connection refused</span></span></span><br><span class="line">------</span><br><span class="line">------</span><br><span class="line"><span class="meta"> &gt;</span><span class="bash"> [shfmt 1/1] RUN --mount=<span class="built_in">type</span>=cache,target=/root/.cache/go-build     --mount=<span class="built_in">type</span>=cache,target=/go/pkg/mod         GOBIN=/build/ GO111MODULE=on go install <span class="string">&quot;mvdan.cc/sh/v3/cmd/shfmt@v3.0.2&quot;</span>      &amp;&amp; /build/shfmt --version:</span></span><br><span class="line"><span class="meta"> &gt;</span><span class="bash"> <span class="comment">#55 24.68 go install: mvdan.cc/sh/v3/cmd/shfmt@v3.0.2: mvdan.cc/sh/v3/cmd/shfmt@v3.0.2: Get &quot;https://proxy.golang.org/mvdan.cc/sh/v3/cmd/shfmt/@v/v3.0.2.info&quot;: dial tcp 172.217.160.81:443: connect: connection refused</span></span></span><br><span class="line">------</span><br><span class="line">executor failed running [/bin/sh -c GOBIN=/build/ GO111MODULE=on go install &quot;mvdan.cc/sh/v3/cmd/shfmt@$&#123;SHFMT_VERSION&#125;&quot;      &amp;&amp; /build/shfmt --version]: exit code: 1</span><br><span class="line">make: *** [Makefile:214: build] Error 1</span><br><span class="line">➜  moby git:(master) ✗</span><br></pre></td></tr></table></figure>
+
+<h4 id="go无法找到mian模块"><a href="#go无法找到mian模块" class="headerlink" title="go无法找到mian模块"></a>go无法找到mian模块</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  moby git:(69f9c8c906) ✗ make BIND_DIR=. shell</span><br><span class="line"></span><br><span class="line">Makefile:157: The docker client CLI has moved to github.com/docker/cli. For a dev-test cycle involving the CLI, run:</span><br><span class="line"> DOCKER_CLI_PATH=/host/path/to/cli/binary make shell</span><br><span class="line"> then change the cli and compile into a binary at the same location.</span><br><span class="line"></span><br><span class="line">DOCKER_BUILDKIT=&quot;1&quot; docker build --build-arg=GO_VERSION  --build-arg=CROSS=false --target=dev -t &quot;docker-dev:HEAD&quot; -f &quot;Dockerfile&quot; .</span><br><span class="line">[+] Building 8.9s (30/68)</span><br><span class="line">...</span><br><span class="line">------</span><br><span class="line"><span class="meta"> &gt;</span><span class="bash"> [vndr 3/3] RUN PREFIX=/build ./install.sh vndr:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">42 3.016 + RM_GOPATH=0</span></span><br><span class="line"><span class="meta">#</span><span class="bash">42 3.016 + TMP_GOPATH=</span></span><br><span class="line"><span class="meta">#</span><span class="bash">42 3.016 + : /build</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">#</span><span class="bash">42 6.332 + go build -buildmode=pie -v -o /build/vndr .</span></span><br><span class="line"><span class="meta">#</span><span class="bash">42 6.361 go: cannot find main module, but found .git/config <span class="keyword">in</span> /tmp/tmp.ZFV3RuyK4q/src/github.com/LK4D4/vndr</span></span><br><span class="line"><span class="meta">#</span><span class="bash">42 6.361       to create a module there, run:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">42 6.361       go mod init</span></span><br><span class="line">------</span><br><span class="line">executor failed running [/bin/sh -c PREFIX=/build ./install.sh $INSTALL_BINARY_NAME]: exit code: 1</span><br><span class="line">make: *** [Makefile:158: build] Error 1</span><br></pre></td></tr></table></figure>
+
+<p>仿佛是因为<strong>GO111MODULE</strong>这个环境变量的问题，在Dockerfile将其配置为<code>off</code>之后就编译成功了。需要了解原理的话看最后的参考链接。</p>
+<h4 id="文件不完整"><a href="#文件不完整" class="headerlink" title="文件不完整"></a>文件不完整</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">20 2.670 + url=https://download.docker.com/linux/static</span></span><br><span class="line"><span class="meta">#</span><span class="bash">20 2.670 + curl -Ls https://download.docker.com/linux/static/stable/x86_64/docker-17.06.2-ce.tgz</span></span><br><span class="line"><span class="meta">#</span><span class="bash">20 2.674 + tar -xz docker/docker</span></span><br><span class="line"><span class="meta">#</span><span class="bash">20 276.2</span></span><br><span class="line"><span class="meta">#</span><span class="bash">20 276.2 gzip: stdin: unexpected end of file</span></span><br><span class="line"><span class="meta">#</span><span class="bash">20 276.2 tar: Unexpected EOF <span class="keyword">in</span> archive</span></span><br><span class="line"><span class="meta">#</span><span class="bash">20 276.2 tar: Error is not recoverable: exiting now</span></span><br><span class="line">------</span><br><span class="line">executor failed running [/bin/sh -c PREFIX=/build ./install.sh $INSTALL_BINARY_NAME]: exit code: 2</span><br><span class="line">make: *** [Makefile:158: build] Error 1</span><br></pre></td></tr></table></figure>
+
+<p>目测是下载docker-17.06.2-ce.tgz这个文件的时候没有下载完整，<code>make clean</code>后重新build一次。</p>
+<h4 id="提示docker-client-CLI项目已经搬迁"><a href="#提示docker-client-CLI项目已经搬迁" class="headerlink" title="提示docker client CLI项目已经搬迁"></a>提示docker client CLI项目已经搬迁</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">Makefile:157: The docker client CLI has moved to github.com/docker/cli. For a dev-test cycle involving the CLI, run:</span><br><span class="line"> DOCKER_CLI_PATH=/host/path/to/cli/binary make shell</span><br><span class="line"> then change the cli and compile into a binary at the same location.</span><br><span class="line"></span><br><span class="line">DOCKER_BUILDKIT=&quot;1&quot; docker build --build-arg=GO_VERSION  --build-arg=CROSS=false --target=dev -t &quot;docker-dev:dry-run-test&quot; -f &quot;Dockerfile&quot; .</span><br></pre></td></tr></table></figure>
+
+<p>这个影响不大，是因为前后端分开维护的原因。可以自行编译CLI，<a target="_blank" rel="noopener" href="https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md">参考链接</a>，不编译也不影响。</p>
+<h2 id="在本地配置环境进行编译"><a href="#在本地配置环境进行编译" class="headerlink" title="在本地配置环境进行编译"></a>在本地配置环境进行编译</h2><h3 id="安装依赖的库"><a href="#安装依赖的库" class="headerlink" title="安装依赖的库"></a>安装依赖的库</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt-get install libbtrfs-dev</span><br><span class="line">sudo apt-get install libbtrfs0</span><br><span class="line">sudo apt-get install gcc</span><br><span class="line">sudo apt-get install pkg-config</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装并配置GO开发环境"><a href="#安装并配置GO开发环境" class="headerlink" title="安装并配置GO开发环境"></a>安装并配置GO开发环境</h3><p>教程请移步其他博客。</p>
+<h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><p>将<a target="_blank" rel="noopener" href="https://github.com/moby/moby">moby的项目</a>克隆到<code>$GOPATH/src/github.com/docker/</code>目录下，并将moby更名为docker，也就是说docker源码的路径是<code>$GOPATH/src/github.com/docker/docker</code></p>
+<img src="https://images.961110.xyz/images/2021/11/01/docker.png" alt="image-20211101170629004" style="zoom:67%;" />
+
+<h3 id="编译-1"><a href="#编译-1" class="headerlink" title="编译"></a>编译</h3><p>在docker源码目录下输入</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">VERSION=testbuild DOCKER_GITCOMMIT=1 ./hack/make.sh binary</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：</p>
+<ul>
+<li><code>VERSION=xxx</code>是指定构建后的docker版本，比如直接安装，会显示<code>18.09.3</code>，此处我们将版本命名为<code>testbuild</code>。</li>
+<li>在编译指令中，你还可以选择储存引擎，只需要再命令前加上<code>DOCKER_GRAPHDRIVER=overlay2</code>就可以了</li>
+<li>构建完成后，生成的二进制文件储存在<code>$GOPATH/src/github.com/docker/docker/bundles/binary-daemon</code>目录下，名字是<code>dockerd</code>。使用<code>ls -l</code>命令可以看到这里已经创建了软连接<code>dockerd -&gt; dockerd-testbuild</code></li>
+</ul>
+<h3 id="替换docker启动文件"><a href="#替换docker启动文件" class="headerlink" title="替换docker启动文件"></a>替换docker启动文件</h3><p>用生成的<code>dockerd</code>替换掉当前系统的docker启动文件。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 停止系统中正在运行的dockerd</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl stop docker</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">找到docker服务文件的位置</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl cat docker.service</span></span><br><span class="line"><span class="meta">#</span><span class="bash">输出的第一行就是docker.service的路径，修改ExecStart</span></span><br><span class="line">/lib/systemd/system/docker.service</span><br></pre></td></tr></table></figure>
+
+<p>修改docker.service，找到<code>ExecStart=/usr/bin/dockerd xxx</code>，将其中的<code>/usr/bin.dockerd</code>替换成刚刚生成的二进制文件，也就是<code>$GOPATH/src/github.com/docker/docker/bundles/binary-daemon/dockerd</code></p>
+<p><strong>注意</strong>：这里的<code>$GOPATH</code>要用绝对路径，每个人设置的路径是不同的。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo $GOPATH</span><br></pre></td></tr></table></figure>
+
+<h3 id="重载及启动docker服务"><a href="#重载及启动docker服务" class="headerlink" title="重载及启动docker服务"></a>重载及启动docker服务</h3><p>替换完成后，终端输入</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> systemctl daemon-reload</span></span><br></pre></td></tr></table></figure>
+
+<p>重载完成后，就可以启动引擎了</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> systemctl start docker</span></span><br></pre></td></tr></table></figure>
+
+<p>验证是否替换成功，执行<code>sudo docker version</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  binary-daemon docker version</span><br><span class="line">Client: Docker Engine - Community</span><br><span class="line"> Version:           20.10.10</span><br><span class="line"> API version:       1.40</span><br><span class="line"> Go version:        go1.16.9</span><br><span class="line"> Git commit:        b485636</span><br><span class="line"> Built:             Mon Oct 25 07:42:59 2021</span><br><span class="line"> OS/Arch:           linux/amd64</span><br><span class="line"> Context:           default</span><br><span class="line"> Experimental:      true</span><br><span class="line"></span><br><span class="line">Server:</span><br><span class="line"> Engine:</span><br><span class="line">  Version:          testbuild</span><br><span class="line">  API version:      1.40 (minimum version 1.12)</span><br><span class="line">  Go version:       go1.13.15</span><br><span class="line">  Git commit:       1</span><br><span class="line">  Built:            Fri Oct 29 11:14:50 2021</span><br><span class="line">  OS/Arch:          linux/amd64</span><br><span class="line">  Experimental:     false</span><br><span class="line"> containerd:</span><br><span class="line">  Version:          1.4.11</span><br><span class="line">  GitCommit:        5b46e404f6b9f661a205e28d59c982d3634148f8</span><br><span class="line"> runc:</span><br><span class="line">  Version:          1.0.2</span><br><span class="line">  GitCommit:        v1.0.2-0-g52b36a2</span><br><span class="line"> docker-init:</span><br><span class="line">  Version:          0.19.0</span><br><span class="line">  GitCommit:        de40ad0</span><br><span class="line">➜  binary-daemon</span><br></pre></td></tr></table></figure>
+
+<p>可以看到Docker Engine已经替换成了刚刚编译的版本。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://ops.tips/blog/compiling-your-own-forked-docker-release/">Compiling and running your own forked Docker release | OpsTips</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/moby/moby/blob/master/docs/contributing/set-up-dev-env.md">moby/set-up-dev-env.md at master · moby/moby (github.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://swayye.xyz/2019/09/03/%E5%88%A9%E7%94%A8go%E7%BC%96%E8%AF%91%E5%99%A8%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91docker/">利用go编译器源码编译docker | 一葉扁舟 (swayye.xyz)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/docker/docker-ce">docker/docker-ce: This repository is deprecated and will be archived (Docker CE itself is NOT deprecated) see the https://github.com/docker/docker-ce/blob/master/README.md</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/docker/cli">docker/cli: The Docker CLI (github.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/moby/moby">moby/moby: Moby Project - a collaborative project for the container ecosystem to assemble container-based systems (github.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/374372749">GO111MODULE 是个啥？ - 知乎 (zhihu.com)</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">JasonChio</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.961110.xyz/posts/21885.html">https://blog.961110.xyz/posts/21885.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.961110.xyz" target="_blank">Jason's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a><a class="post-meta__tags" href="/tags/%E6%AF%95%E8%AE%BE/">毕设</a><a class="post-meta__tags" href="/tags/Docker/">Docker</a><a class="post-meta__tags" href="/tags/Docker%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/">Docker源码编译</a></div><div class="post_share"><div class="social-share" data-image="https://images.961110.xyz/images/2021/10/30/docker-ce-overview.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/60538.html"><img class="next-cover" src="https://images.961110.xyz/images/2021/10/20/Linux.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">VMware虚拟机使用主机代理</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/32194.html" title="Docker更新日志（截止到2020年9月10日）"><img class="cover" src="https://images.961110.xyz/images/2021/10/23/Docker-logo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-23</div><div class="title">Docker更新日志（截止到2020年9月10日）</div></div></a></div><div><a href="/posts/40489.html" title="lambda表达式"><img class="cover" src="https://images.961110.xyz/images/2021/10/20/80e265163975c9e8335a4c1d75933133.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-20</div><div class="title">lambda表达式</div></div></a></div><div><a href="/posts/2771.html" title="Linux内核裁剪"><img class="cover" src="https://images.961110.xyz/images/2021/10/20/menuconfig-Kconfig-.config-makefile.png" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-20</div><div class="title">Linux内核裁剪</div></div></a></div><div><a href="/posts/64925.html" title="ARM目标代码优化"><img class="cover" src="https://images.961110.xyz/images/2021/10/20/7604bca29581b1b8535f438a637969cb.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-20</div><div class="title">ARM目标代码优化</div></div></a></div><div><a href="/posts/62642.html" title="Linux内核模块"><img class="cover" src="https://blog.961110.xyz/images/default_top_img.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-20</div><div class="title">Linux内核模块</div></div></a></div><div><a href="/posts/29265.html" title="《智能网联汽车技术》读书笔记"><img class="cover" src="https://images.961110.xyz/images/2021/10/20/814be6501b5b1c1d38867352cb0ace49.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2021-10-20</div><div class="title">《智能网联汽车技术》读书笔记</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://blog.961110.xyz/images/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">JasonChio</div><div class="author-info__description">让琐碎的记录变为成长的基石</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">26</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a class="button--animated" id="card-info-btn" href="https://blog.961110.xyz/images/WeChat-QRCode.jpg"><i class="fab fa-weixin"></i><span>等一个小红点</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/jasonchio-cn" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:zyb389120217@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://blog.961110.xyz/images/WeChat-QRCode.jpg" target="_blank" title="WeChat"><i class="fab fa-weixin"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=389120217&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">本博客正处于测试阶段，如有问题或建议请联系博主，谢谢！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%83%85%E6%A2%97%E6%A6%82"><span class="toc-number">1.</span> <span class="toc-text">前情梗概</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8docker-dev%E9%95%9C%E5%83%8F%E5%9C%A8%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%BC%96%E8%AF%91"><span class="toc-number">2.</span> <span class="toc-text">使用docker-dev镜像在容器中编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Docker"><span class="toc-number">2.1.</span> <span class="toc-text">安装Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%8B%E9%9A%86moby%E4%BB%93%E5%BA%93%E5%B9%B6%E5%88%87%E6%8D%A2%E5%88%B0%E7%9B%B8%E5%BA%94%E5%88%86%E6%94%AF"><span class="toc-number">2.2.</span> <span class="toc-text">克隆moby仓库并切换到相应分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E7%A9%BA%E6%89%80%E6%9C%89%E7%8E%B0%E6%9C%89%E9%95%9C%E5%83%8F%E5%92%8C%E5%AE%B9%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">清空所有现有镜像和容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8Dockerfile%E6%9E%84%E5%BB%BAdocker-dev%E9%95%9C%E5%83%8F"><span class="toc-number">2.4.</span> <span class="toc-text">利用Dockerfile构建docker-dev镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-dev%E7%8E%AF%E5%A2%83"><span class="toc-number">2.5.</span> <span class="toc-text">docker-dev环境</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-version"><span class="toc-number">2.5.1.</span> <span class="toc-text">docker version</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#go-env"><span class="toc-number">2.5.2.</span> <span class="toc-text">go env</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91docker-binary"><span class="toc-number">2.6.</span> <span class="toc-text">编译docker binary</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-number">2.6.1.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">2.6.2.</span> <span class="toc-text">安装</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8docker-dev%E9%95%9C%E5%83%8F%E7%BC%96%E8%AF%91%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.7.</span> <span class="toc-text">使用docker-dev镜像编译遇到的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8Egithub%E5%85%8B%E9%9A%86%E9%A1%B9%E7%9B%AE%E8%B6%85%E6%97%B6"><span class="toc-number">2.7.1.</span> <span class="toc-text">从github克隆项目超时</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#go-install%E8%B6%85%E6%97%B6"><span class="toc-number">2.7.2.</span> <span class="toc-text">go install超时</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#go%E6%97%A0%E6%B3%95%E6%89%BE%E5%88%B0mian%E6%A8%A1%E5%9D%97"><span class="toc-number">2.7.3.</span> <span class="toc-text">go无法找到mian模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8D%E5%AE%8C%E6%95%B4"><span class="toc-number">2.7.4.</span> <span class="toc-text">文件不完整</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%90%E7%A4%BAdocker-client-CLI%E9%A1%B9%E7%9B%AE%E5%B7%B2%E7%BB%8F%E6%90%AC%E8%BF%81"><span class="toc-number">2.7.5.</span> <span class="toc-text">提示docker client CLI项目已经搬迁</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91"><span class="toc-number">3.</span> <span class="toc-text">在本地配置环境进行编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E7%9A%84%E5%BA%93"><span class="toc-number">3.1.</span> <span class="toc-text">安装依赖的库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%B9%B6%E9%85%8D%E7%BD%AEGO%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="toc-number">3.2.</span> <span class="toc-text">安装并配置GO开发环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81"><span class="toc-number">3.3.</span> <span class="toc-text">下载源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-1"><span class="toc-number">3.4.</span> <span class="toc-text">编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2docker%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6"><span class="toc-number">3.5.</span> <span class="toc-text">替换docker启动文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E8%BD%BD%E5%8F%8A%E5%90%AF%E5%8A%A8docker%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.6.</span> <span class="toc-text">重载及启动docker服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/21885.html" title="编译docker engine源码的两种方法以及遇到的问题"><img src="https://images.961110.xyz/images/2021/10/30/docker-ce-overview.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="编译docker engine源码的两种方法以及遇到的问题"/></a><div class="content"><a class="title" href="/posts/21885.html" title="编译docker engine源码的两种方法以及遇到的问题">编译docker engine源码的两种方法以及遇到的问题</a><time datetime="2021-11-01T09:22:00.000Z" title="发表于 2021-11-01 17:22:00">2021-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/60538.html" title="VMware虚拟机使用主机代理"><img src="https://images.961110.xyz/images/2021/10/20/Linux.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VMware虚拟机使用主机代理"/></a><div class="content"><a class="title" href="/posts/60538.html" title="VMware虚拟机使用主机代理">VMware虚拟机使用主机代理</a><time datetime="2021-10-27T05:37:00.000Z" title="发表于 2021-10-27 13:37:00">2021-10-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/29306.html" title="Linux（树莓派）安装Frpc"><img src="https://images.961110.xyz/images/2021/10/26/frp-logo.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux（树莓派）安装Frpc"/></a><div class="content"><a class="title" href="/posts/29306.html" title="Linux（树莓派）安装Frpc">Linux（树莓派）安装Frpc</a><time datetime="2021-10-26T13:52:00.000Z" title="发表于 2021-10-26 21:52:00">2021-10-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1027.html" title="Ubuntu 20.04 提示找不到 python"><img src="https://images.961110.xyz/images/2021/10/20/Linux.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu 20.04 提示找不到 python"/></a><div class="content"><a class="title" href="/posts/1027.html" title="Ubuntu 20.04 提示找不到 python">Ubuntu 20.04 提示找不到 python</a><time datetime="2021-10-25T09:09:00.000Z" title="发表于 2021-10-25 17:09:00">2021-10-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3687.html" title="VMware授权服务启动失败、ens33网卡没有IP地址解决方案"><img src="https://images.961110.xyz/images/2021/10/20/Linux.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VMware授权服务启动失败、ens33网卡没有IP地址解决方案"/></a><div class="content"><a class="title" href="/posts/3687.html" title="VMware授权服务启动失败、ens33网卡没有IP地址解决方案">VMware授权服务启动失败、ens33网卡没有IP地址解决方案</a><time datetime="2021-10-25T08:45:00.000Z" title="发表于 2021-10-25 16:45:00">2021-10-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By JasonChio</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>(()=>{
+  const $countDom = document.getElementById('twikoo-count')
+  const init = () => {
+    twikoo.init(Object.assign({
+      el: '#twikoo-wrap',
+      envId: 'blog-8gnb16sc8c17d918',
+      region: ''
+    }, null))
+  }
+
+  const getCount = () => {
+    twikoo.getCommentsCount({
+      envId: 'blog-8gnb16sc8c17d918',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(function (res) {
+      $countDom.innerText = res[0].count
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+
+  const loadTwikoo = (bool = false) => {
+    if (typeof twikoo === 'object') {
+      init()
+      bool && $countDom && setTimeout(getCount,0)
+    } else {
+      getScript('https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js').then(()=> {
+        init()
+        bool && $countDom && setTimeout(getCount,0)
+      })
+    }
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo(true)
+  } else {
+    window.loadOtherComment = () => {
+      loadTwikoo()
+    }
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.16/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?jasonchio-cn";
+            var git_color =['#ebedf0', '#f0fff4', '#dcffe4', '#bef5cb', '#85e89d', '#34d058', '#28a745', '#22863a', '#176f2c', '#165c26', '#144620'];
+            var git_user ="jasonchio-cn";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style>undefined</style><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/tzy13755126023/BLOG_SOURCE/theme_f/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://cdn.jsdelivr.net/npm/hexo-butterfly-clock/lib/clock.min.js"></script><!-- hexo injector body_end end --></body></html>
