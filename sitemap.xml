@@ -2,14 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.961110.xyz/posts/39632.html</loc>
+    <loc>https://blog.961110.xyz/posts/2533.html</loc>
     
     <lastmod>2021-11-21</lastmod>
     
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/posts/2533.html</loc>
+    <loc>https://blog.961110.xyz/posts/39632.html</loc>
     
     <lastmod>2021-11-21</lastmod>
     
@@ -403,14 +403,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E7%9B%91%E6%8E%A7/</loc>
+    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
+    <loc>https://blog.961110.xyz/tags/%E7%9B%91%E6%8E%A7/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -438,13 +438,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/VMware/</loc>
-    <lastmod>2021-11-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/Python/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
@@ -452,7 +445,7 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/frp/</loc>
+    <loc>https://blog.961110.xyz/tags/VMware/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -473,6 +466,13 @@
   </url>
   
   <url>
+    <loc>https://blog.961110.xyz/tags/frp/</loc>
+    <lastmod>2021-11-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/tags/Docker%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
@@ -480,14 +480,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/git/</loc>
+    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
+    <loc>https://blog.961110.xyz/tags/git/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -529,20 +529,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E6%99%BA%E8%83%BD%E7%BD%91%E8%81%94%E6%B1%BD%E8%BD%A6/</loc>
-    <lastmod>2021-11-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E9%98%85%E8%AF%BB/</loc>
-    <lastmod>2021-11-21</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/ARM/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
@@ -551,6 +537,20 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96/</loc>
+    <lastmod>2021-11-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E6%99%BA%E8%83%BD%E7%BD%91%E8%81%94%E6%B1%BD%E8%BD%A6/</loc>
+    <lastmod>2021-11-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E9%98%85%E8%AF%BB/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -601,14 +601,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/categories/%E6%99%BA%E8%83%BD%E7%BD%91%E8%81%94%E6%B1%BD%E8%BD%A6/</loc>
+    <loc>https://blog.961110.xyz/categories/%E4%BB%A3%E7%A0%81/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/categories/%E4%BB%A3%E7%A0%81/</loc>
+    <loc>https://blog.961110.xyz/categories/%E6%99%BA%E8%83%BD%E7%BD%91%E8%81%94%E6%B1%BD%E8%BD%A6/</loc>
     <lastmod>2021-11-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
