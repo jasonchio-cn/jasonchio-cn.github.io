@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.961110.xyz/posts/39632.html</loc>
+    
+    <lastmod>2021-11-22</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/posts/2533.html</loc>
     
     <lastmod>2021-11-22</lastmod>
@@ -11,14 +18,7 @@
   <url>
     <loc>https://blog.961110.xyz/posts/56133.html</loc>
     
-    <lastmod>2021-11-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/posts/39632.html</loc>
-    
-    <lastmod>2021-11-21</lastmod>
+    <lastmod>2021-11-22</lastmod>
     
   </url>
   
@@ -368,6 +368,13 @@
   </url>
   
   <url>
+    <loc>https://blog.961110.xyz/tags/Linux/</loc>
+    <lastmod>2021-11-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/tags/zsh/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
@@ -376,27 +383,6 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/shell/</loc>
-    <lastmod>2021-11-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/Linux/</loc>
-    <lastmod>2021-11-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
-    <lastmod>2021-11-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -417,6 +403,20 @@
   </url>
   
   <url>
+    <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2021-11-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
+    <lastmod>2021-11-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/tags/Docker/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
@@ -431,14 +431,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
+    <loc>https://blog.961110.xyz/tags/VMware/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/VMware/</loc>
+    <loc>https://blog.961110.xyz/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -453,6 +453,13 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/frp/</loc>
+    <lastmod>2021-11-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/git/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -474,13 +481,6 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/Docker%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/</loc>
-    <lastmod>2021-11-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/git/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
