@@ -2,7 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.961110.xyz/gallery/%E6%99%AF/index.html</loc>
+    
+    <lastmod>2021-11-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/link/index.html</loc>
+    
+    <lastmod>2021-11-22</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/posts/39632.html</loc>
+    
+    <lastmod>2021-11-22</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/posts/41554.html</loc>
     
     <lastmod>2021-11-22</lastmod>
     
@@ -142,13 +163,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/link/index.html</loc>
-    
-    <lastmod>2021-10-23</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/posts/29824.html</loc>
     
     <lastmod>2021-10-23</lastmod>
@@ -227,13 +241,6 @@
   
   <url>
     <loc>https://blog.961110.xyz/gallery/2021-09/index.html</loc>
-    
-    <lastmod>2021-10-21</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/gallery/%E6%99%AF/index.html</loc>
     
     <lastmod>2021-10-21</lastmod>
     
@@ -389,20 +396,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
-    <lastmod>2021-11-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E7%9B%91%E6%8E%A7/</loc>
-    <lastmod>2021-11-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
@@ -411,6 +404,20 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
+    <lastmod>2021-11-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
+    <lastmod>2021-11-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E7%9B%91%E6%8E%A7/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -431,14 +438,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/VMware/</loc>
+    <loc>https://blog.961110.xyz/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
+    <loc>https://blog.961110.xyz/tags/VMware/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -453,13 +460,6 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/frp/</loc>
-    <lastmod>2021-11-22</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/git/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -481,6 +481,13 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/Docker%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/</loc>
+    <lastmod>2021-11-22</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/git/</loc>
     <lastmod>2021-11-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
