@@ -2,15 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://blog.961110.xyz/baidu_verify_code-Z9NFawchAQ.html</loc>
-    
-    <lastmod>2021-11-29</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/posts/21441.html</loc>
     
     <lastmod>2021-11-29</lastmod>
@@ -536,27 +527,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
-    <lastmod>2021-11-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-11-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E6%AF%95%E8%AE%BE/</loc>
-    <lastmod>2021-11-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/Docker/</loc>
     <lastmod>2021-11-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -565,6 +535,13 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/%E5%9B%BE%E5%BA%8A/</loc>
+    <lastmod>2021-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
     <lastmod>2021-11-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -586,6 +563,20 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/frp/</loc>
+    <lastmod>2021-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2021-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E6%AF%95%E8%AE%BE/</loc>
     <lastmod>2021-11-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
