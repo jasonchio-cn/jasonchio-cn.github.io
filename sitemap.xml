@@ -571,13 +571,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/frp/</loc>
-    <lastmod>2021-11-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2021-11-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -592,6 +585,13 @@
   </url>
   
   <url>
+    <loc>https://blog.961110.xyz/tags/frp/</loc>
+    <lastmod>2021-11-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/tags/Docker%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/</loc>
     <lastmod>2021-11-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -599,14 +599,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
+    <loc>https://blog.961110.xyz/tags/git/</loc>
     <lastmod>2021-11-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/git/</loc>
+    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
     <lastmod>2021-11-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
