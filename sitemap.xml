@@ -521,20 +521,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/zsh/</loc>
-    <lastmod>2021-11-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/shell/</loc>
-    <lastmod>2021-11-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
     <lastmod>2021-11-30</lastmod>
     <changefreq>weekly</changefreq>
@@ -543,6 +529,20 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
+    <lastmod>2021-11-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/zsh/</loc>
+    <lastmod>2021-11-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/shell/</loc>
     <lastmod>2021-11-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -577,20 +577,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2021-11-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E6%AF%95%E8%AE%BE/</loc>
-    <lastmod>2021-11-30</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
     <lastmod>2021-11-30</lastmod>
     <changefreq>weekly</changefreq>
@@ -606,6 +592,20 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/Python/</loc>
+    <lastmod>2021-11-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2021-11-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E6%AF%95%E8%AE%BE/</loc>
     <lastmod>2021-11-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -633,14 +633,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Windows-10/</loc>
+    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
     <lastmod>2021-11-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
+    <loc>https://blog.961110.xyz/tags/Windows-10/</loc>
     <lastmod>2021-11-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
