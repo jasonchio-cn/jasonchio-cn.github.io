@@ -612,6 +612,13 @@
   </url>
   
   <url>
+    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
+    <lastmod>2021-12-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/tags/%E7%9B%91%E6%8E%A7/</loc>
     <lastmod>2021-12-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -661,13 +668,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
-    <lastmod>2021-12-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2021-12-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -689,14 +689,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
+    <loc>https://blog.961110.xyz/tags/git/</loc>
     <lastmod>2021-12-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/git/</loc>
+    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
     <lastmod>2021-12-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
