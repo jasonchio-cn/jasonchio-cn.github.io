@@ -629,14 +629,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/zsh/</loc>
+    <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/shell/</loc>
+    <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -650,14 +650,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
+    <loc>https://blog.961110.xyz/tags/zsh/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
+    <loc>https://blog.961110.xyz/tags/shell/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -692,20 +692,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/VMware/</loc>
-    <lastmod>2022-01-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/Python/</loc>
-    <lastmod>2022-01-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/frp/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
@@ -727,14 +713,21 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Docker%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/</loc>
+    <loc>https://blog.961110.xyz/tags/VMware/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
+    <loc>https://blog.961110.xyz/tags/Python/</loc>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/Docker%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -749,6 +742,13 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/Windows-10/</loc>
+    <lastmod>2022-01-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
     <lastmod>2022-01-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
