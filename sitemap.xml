@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.961110.xyz/posts/61140.html</loc>
+    
+    <lastmod>2022-04-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/posts/7990.html</loc>
     
     <lastmod>2022-04-29</lastmod>
@@ -712,20 +721,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
-    <lastmod>2022-04-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
-    <lastmod>2022-04-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/zsh/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -740,14 +735,28 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
+    <loc>https://blog.961110.xyz/tags/Linux/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Linux/</loc>
+    <loc>https://blog.961110.xyz/tags/%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2022-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91/</loc>
+    <lastmod>2022-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E6%B8%B8%E6%88%8F/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -810,6 +819,13 @@
   </url>
   
   <url>
+    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
+    <lastmod>2022-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/tags/%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -832,13 +848,6 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/Windows-10/</loc>
-    <lastmod>2022-04-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/Powershell/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -880,13 +889,6 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/%E8%B0%83%E8%AF%95/</loc>
-    <lastmod>2022-04-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.961110.xyz/tags/ARM/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -901,14 +903,14 @@
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Ubuntu-20-04/</loc>
+    <loc>https://blog.961110.xyz/tags/%E8%B0%83%E8%AF%95/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://blog.961110.xyz/tags/Ubuntu/</loc>
+    <loc>https://blog.961110.xyz/tags/Ubuntu-20-04/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -929,6 +931,20 @@
   </url>
   
   <url>
+    <loc>https://blog.961110.xyz/tags/Ubuntu/</loc>
+    <lastmod>2022-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.961110.xyz/tags/%E7%BE%A4%E6%99%96/</loc>
+    <lastmod>2022-04-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.961110.xyz/tags/%E6%99%BA%E8%83%BD%E7%BD%91%E8%81%94%E6%B1%BD%E8%BD%A6/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -937,13 +953,6 @@
   
   <url>
     <loc>https://blog.961110.xyz/tags/%E9%98%85%E8%AF%BB/</loc>
-    <lastmod>2022-04-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://blog.961110.xyz/tags/%E7%BE%A4%E6%99%96/</loc>
     <lastmod>2022-04-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
