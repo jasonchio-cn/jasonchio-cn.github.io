@@ -1,0 +1,592 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="前言 [[80. Hugo博客搭建-使用 Docker 容器搭建 Hugo 博客环境]] 上一篇文章写了基于 Docker 容器搭建 Hugo 博客，这一篇就记录一下博客的配置过程。\n基础配置 在 Hugo 仓库初始化后，默认的配置文件 hugo.yaml 非常简单\n"><title>Hugo博客搭建-Hugo+Stack 主题配置</title><link rel=canonical href=https://blog.961110.xyz:10010/post/2025-03-15t170719+0800/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="Hugo博客搭建-Hugo+Stack 主题配置"><meta property='og:description' content="前言 [[80. Hugo博客搭建-使用 Docker 容器搭建 Hugo 博客环境]] 上一篇文章写了基于 Docker 容器搭建 Hugo 博客，这一篇就记录一下博客的配置过程。\n基础配置 在 Hugo 仓库初始化后，默认的配置文件 hugo.yaml 非常简单\n"><meta property='og:url' content='https://blog.961110.xyz:10010/post/2025-03-15t170719+0800/'><meta property='og:site_name' content='积跬步行千里'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2025-03-15T17:07:19+08:00'><meta property='article:modified_time' content='2025-04-18T22:41:19+08:00'><meta name=twitter:title content="Hugo博客搭建-Hugo+Stack 主题配置"><meta name=twitter:description content="前言 [[80. Hugo博客搭建-使用 Docker 容器搭建 Hugo 博客环境]] 上一篇文章写了基于 Docker 容器搭建 Hugo 博客，这一篇就记录一下博客的配置过程。\n基础配置 在 Hugo 仓库初始化后，默认的配置文件 hugo.yaml 非常简单\n"><script async src="https://www.googletagmanager.com/gtag/js?id=G-YQ9F51F77Q"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YQ9F51F77Q")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src width height class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>积跬步行千里</a></h1><h2 class=site-description>JasonChio</h2></div></header><ol class=menu-social><li><a href=https://space.bilibili.com/30240401 title=Bilibili rel=me><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=mailto:zyb389120217@gmail.com title=Email rel=me><svg class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li><li><a href=https://github.com/jasonchio-cn title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title"></h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ol><li><a href=#前言>前言</a></li><li><a href=#基础配置>基础配置</a><ol><li><a href=#复用-stack-主题的配置>复用 stack 主题的配置</a></li><li><a href=#基础部分>基础部分</a><ol><li><a href=#博文页面>博文页面</a></li><li><a href=#主页组件>主页组件</a></li></ol></li><li><a href=#自定义后的完整配置文件>自定义后的完整配置文件</a></li></ol></li><li><a href=#评论组件>评论组件</a></li><li><a href=#总结>总结</a></li><li><a href=#参考链接>参考链接</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/2025-03-15t170719+0800/>Hugo博客搭建-Hugo+Stack 主题配置</a></h2></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2025-03-15T17:07:19+08:00>2025-03-15</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span></span></div></summary><nav class=toc-nav><ol><li><a href=#前言>前言</a></li><li><a href=#基础配置>基础配置</a><ol><li><a href=#复用-stack-主题的配置>复用 stack 主题的配置</a></li><li><a href=#基础部分>基础部分</a><ol><li><a href=#博文页面>博文页面</a></li><li><a href=#主页组件>主页组件</a></li></ol></li><li><a href=#自定义后的完整配置文件>自定义后的完整配置文件</a></li></ol></li><li><a href=#评论组件>评论组件</a></li><li><a href=#总结>总结</a></li><li><a href=#参考链接>参考链接</a></li></ol></nav></details></aside><section class=article-content><h2 id=前言>前言</h2><p>[[80. Hugo博客搭建-使用 Docker 容器搭建 Hugo 博客环境]]
+上一篇文章写了基于 Docker 容器搭建 Hugo 博客，这一篇就记录一下博客的配置过程。</p><h2 id=基础配置>基础配置</h2><p>在 Hugo 仓库初始化后，默认的配置文件 <code>hugo.yaml</code> 非常简单</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>/src <span class=c1># ls</span>
+</span></span><span class=line><span class=cl>archetypes  assets      content     data        hugo.yaml   i18n        layouts     public      resources   static      themes
+</span></span><span class=line><span class=cl>/src <span class=c1># cat hugo.yaml </span>
+</span></span><span class=line><span class=cl>baseURL: https://example.org/
+</span></span><span class=line><span class=cl>languageCode: en-us
+</span></span><span class=line><span class=cl>title: My New Hugo Site
+</span></span><span class=line><span class=cl>theme: hugo-theme-stack
+</span></span></code></pre></td></tr></table></div></div><h3 id=复用-stack-主题的配置>复用 stack 主题的配置</h3><p>我们可以把 Stack 主题的示例配置直接复制过来，同时可以打开本地地址体会一下 Hugo 近实时渲染的魅力。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>cp ./themes/hugo-theme-stack/exampleSite/hugo.yaml hugo.yaml
+</span></span></code></pre></td></tr></table></div></div><p><img alt=PixPin_2025-03-26_23-20-10 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p>把 stack 主题的 <code>content</code> 目录下除<code>post/richcontent</code>的所有内容都复制到 <code>/src/content</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>/src <span class=c1># cd themes/hugo-theme-stack/exampleSite/content/</span>
+</span></span><span class=line><span class=cl>/src/themes/hugo-theme-stack/exampleSite/content <span class=c1># find . -path ./post/rich-content -prune -o -print0 | cpio -pdmv0 /src/content/</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果<code>richcontent</code>也复制过来，渲染会报如下错误</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>Error: error building site: render: failed to render pages: render of <span class=s2>&#34;/src/content/post/rich-content/index.md&#34;</span> failed: <span class=s2>&#34;/src/themes/hugo-theme-stack/layouts/_default/single.html:27:7&#34;</span>: execute of template failed: template: _default/single.html:27:7: executing <span class=s2>&#34;main&#34;</span> at &lt;partial <span class=s2>&#34;article/article.html&#34;</span> .&gt;: error calling partial: partial <span class=s2>&#34;article/article.html&#34;</span> timed out after 30s. This is most likely due to infinite recursion. If this is just a slow template, you can try to increase the <span class=s1>&#39;timeout&#39;</span> config setting.
+</span></span></code></pre></td></tr></table></div></div><p>在复制后到post目录下，例如<code>http://192.168.123.222:18099/post/</code>我们的博客会变成这样
+<img alt=file-20250416231656852 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p>完整的配置文件如下，后面我会逐个部分地解释其作用</p><details><summary>点击查看完整配置</summary>``` yaml
+baseurl: https://example.com/
+languageCode: en-us
+theme: hugo-theme-stack
+title: Example Site
+copyright: Example Person<pre><code># Theme i18n support
+# Available values: ar, bn, ca, de, el, en, es, fr, hu, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
+DefaultContentLanguage: en
+
+# Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
+# This will make .Summary and .WordCount behave correctly for CJK languages.
+hasCJKLanguage: false
+
+languages:
+  en:
+	languageName: English
+	title: Example Site
+	weight: 1
+	params:
+	  sidebar:
+		subtitle: Example description
+  zh-cn:
+	languageName: 中文
+	title: 演示站点
+	weight: 2
+	params:
+	  sidebar:
+		subtitle: 演示说明
+  ar:
+	languageName: عربي
+	languagedirection: rtl
+	title: موقع تجريبي
+	weight: 3
+	params:
+	  sidebar:
+		subtitle: وصف تجريبي
+
+services:
+  # Change it to your Disqus shortname before using
+  disqus:
+	shortname: &quot;hugo-theme-stack&quot;
+  # GA Tracking ID
+  googleAnalytics:
+	id:
+
+pagination:
+  pagerSize: 3
+
+permalinks:
+  post: /p/:slug/
+  page: /:slug/
+
+params:
+  mainSections:
+	- post
+  featuredImageField: image
+  rssFullContent: true
+  favicon: # e.g.: favicon placed in `static/favicon.ico` of your site folder, then set this field to `/favicon.ico` (`/` is necessary)
+
+  footer:
+	since: 2020
+	customText:
+
+  dateFormat:
+	published: Jan 02, 2006
+	lastUpdated: Jan 02, 2006 15:04 MST
+
+  sidebar:
+	emoji: 🍥
+	subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+	avatar:
+	  enabled: true
+	  local: true
+	  src: img/avatar.png
+
+  article:
+	math: false
+	toc: true
+	readingTime: true
+	license:
+	  enabled: true
+	  default: Licensed under CC BY-NC-SA 4.0
+
+  comments:
+	enabled: true
+	provider: disqus
+
+	disqusjs:
+	  shortname:
+	  apiUrl:
+	  apiKey:
+	  admin:
+	  adminLabel:
+
+	utterances:
+	  repo:
+	  issueTerm: pathname
+	  label:
+
+	beaudar:
+	  repo:
+	  issueTerm: pathname
+	  label:
+	  theme:
+
+	remark42:
+	  host:
+	  site:
+	  locale:
+
+	vssue:
+	  platform:
+	  owner:
+	  repo:
+	  clientId:
+	  clientSecret:
+	  autoCreateIssue: false
+
+	# Waline client configuration see: https://waline.js.org/en/reference/component.html
+	waline:
+	  serverURL:
+	  lang:
+	  pageview:
+	  emoji:
+		- https://unpkg.com/@waline/emojis@1.0.1/weibo
+	  requiredMeta:
+		- name
+		- email
+		- url
+	  locale:
+		admin: Admin
+		placeholder:
+
+	twikoo:
+	  envId:
+	  region:
+	  path:
+	  lang:
+
+	# See https://cactus.chat/docs/reference/web-client/#configuration for description of the various options
+	cactus:
+	  defaultHomeserverUrl: &quot;https://matrix.cactus.chat:8448&quot;
+	  serverName: &quot;cactus.chat&quot;
+	  siteName: &quot;&quot; # You must insert a unique identifier here matching the one you registered (See https://cactus.chat/docs/getting-started/quick-start/#register-your-site)
+
+	giscus:
+	  repo:
+	  repoID:
+	  category:
+	  categoryID:
+	  mapping:
+	  lightTheme:
+	  darkTheme:
+	  reactionsEnabled: 1
+	  emitMetadata: 0
+
+	gitalk:
+	  owner:
+	  admin:
+	  repo:
+	  clientID:
+	  clientSecret:
+	  proxy:
+
+	cusdis:
+	  host:
+	  id:
+  widgets:
+	homepage:
+	  - type: search
+	  - type: archives
+		params:
+		  limit: 5
+	  - type: categories
+		params:
+		  limit: 10
+	  - type: tag-cloud
+		params:
+		  limit: 10
+	page:
+	  - type: toc
+
+  opengraph:
+	twitter:
+	  # Your Twitter username
+	  site:
+
+	  # Available values: summary, summary_large_image
+	  card: summary_large_image
+
+  defaultImage:
+	opengraph:
+	  enabled: false
+	  local: false
+	  src:
+
+  colorScheme:
+	# Display toggle
+	toggle: true
+
+	# Available values: auto, light, dark
+	default: auto
+
+  imageProcessing:
+	cover:
+	  enabled: true
+	content:
+	  enabled: true
+
+### Custom menu
+### See https://stack.jimmycai.com/config/menu
+### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter
+menu:
+  main: []
+
+  social:
+	- identifier: github
+	  name: GitHub
+	  url: https://github.com/CaiJimmy/hugo-theme-stack
+	  params:
+		icon: brand-github
+
+	- identifier: twitter
+	  name: Twitter
+	  url: https://twitter.com
+	  params:
+		icon: brand-twitter
+
+related:
+  includeNewer: true
+  threshold: 60
+  toLower: false
+  indices:
+	- name: tags
+	  weight: 100
+
+	- name: categories
+	  weight: 200
+
+markup:
+  goldmark:
+	extensions:
+	  passthrough:
+		enable: true
+		delimiters:
+		  block:
+			- - \[
+			  - \]
+			- - $$
+			  - $$
+		  inline:
+			- - \(
+			  - \)
+	renderer:
+	  ## Set to true if you have HTML content inside Markdown
+	  unsafe: true
+  tableOfContents:
+	endLevel: 4
+	ordered: true
+	startLevel: 2
+  highlight:
+	noClasses: false
+	codeFences: true
+	guessSyntax: true
+	lineNoStart: 1
+	lineNos: true
+	lineNumbersInTable: true
+	tabWidth: 4
+
+```
+</code></pre></details><h3 id=基础部分>基础部分</h3><p>我直接放对照图，一图胜千言。</p><p><img alt=file-20250330203918842 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p><img alt=file-20250330204100180 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p><img alt=file-20250415233958370 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><h4 id=博文页面>博文页面</h4><p><img alt=file-20250330204326269 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p><img alt=file-20250330204253956 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p><img alt=file-20250415234040336 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p><img alt=file-20250415232918543 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><h4 id=主页组件>主页组件</h4><p><img alt=file-20250415232835585 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><h3 id=自定义后的完整配置文件>自定义后的完整配置文件</h3><details><summary>点击查看完整配置</summary>``` yaml
+baseurl: http://192.168.123.222:8090 # 网站的URL
+languageCode: zh-cn # 默认语言，zh-cn表示中文
+theme: hugo-theme-stack # 主题
+title: 积跬步行千里 # 网站标题，会显示在浏览器标签上
+copyright: JasonChio # 网站版权所有者，显示在页面底部<pre><code># Theme i18n support
+# Available values: ar, bn, ca, de, el, en, es, fr, hu, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
+DefaultContentLanguage: zh-cn # 网站内容的默认语言
+
+# Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
+# This will make .Summary and .WordCount behave correctly for CJK languages.
+hasCJKLanguage: true # 如果是中文、韩文、日文，设置为 true 以确保摘要和字数统计正确。
+
+languages:
+  zh-cn:
+	languageName: 中文 # 中文语言配置
+	title: 积跬步行千里 # 中文站点标题
+	weight: 1 # 语言权重，数值越小排序越靠前，这里只有一种语言，无所谓权重
+	params:
+	  sidebar:
+		subtitle: JasonChio
+
+services:
+  # GA Tracking ID
+  googleAnalytics:
+	id: G-YQ9F51F77Q # Google Analytics 追踪 ID，用于网站流量统计。
+
+pagination:
+  pagerSize: 3
+
+permalinks:
+  post: /p/:slug/ # 博客文章的永久链接格式，使用文章的 slug 作为路径。
+  page: /:slug/ # 页面内容的永久链接格式。
+
+params:
+  mainSections:
+	- post # 主内容区域，显示文章内容。
+  featuredImageField: image
+  rssFullContent: true # RSS 提要是否包含全文内容。
+  favicon: # 网站的favicon路径，例如`/favicon.ico`。
+
+  footer:
+	since: 2020 # 网站创建年份，通常显示在页脚。
+	customText: 间歇性更新 持续性尝试更新 # 自定义页脚文本。
+
+  dateFormat:
+	published: 2006-01-02 # 发布日期格式。
+	lastUpdated: 2006-01-02 15:04:00 # 最后更新日期格式。
+
+  sidebar:
+	emoji: 🍥 # 侧边栏头像上显示的 emoji。
+	subtitle: test. # 侧边栏的副标题。
+	avatar:
+	  enabled: true # 是否启用头像显示。
+	  local: false # 是否使用本地头像，我这里用的是远程链接，所以这里是false
+	  src: https://image.961110.xyz:10010/i/2025/03/avatar-自定义-1.webp
+
+  article:
+	math: true # 是否支持数学公式渲染。
+	toc: true # 是否显示文章目录。
+	readingTime: true # 是否显示预计阅读时间。
+	license:
+	  enabled: true # 是否启用文章版权信息。
+	  default: Licensed under CC BY-NC-SA 4.0
+
+  comments:
+	enabled: true # 是否启用评论功能。
+	provider: twikoo  # 选择的评论源，其他的都可以删掉
+
+	twikoo:
+	  envId: http://192.168.123.222:31080
+	  lang: zh-CN
+
+  widgets:
+	homepage:
+	  - type: search # 首页的小部件，搜索功能。
+	  - type: archives # 首页的小部件，文章归档。
+		params:
+		  limit: 5 # 显示的归档文章数量。
+	  - type: categories # 首页的小部件，文章分类。
+		params:
+		  limit: 10 # 显示的分类数量。
+	  - type: tag-cloud # 首页的小部件，标签云。
+		params:
+		  limit: 10 # 显示的标签数量。
+	page:
+	  - type: toc # 页面的小部件，显示文章目录。
+
+  opengraph:
+	twitter:
+	  # Your Twitter username
+	  site: # 你的 Twitter 用户名，将在 OpenGraph 元数据中使用。
+
+	  # Available values: summary, summary_large_image
+	  card: summary_large_image # Twitter 卡片类型。可以选择 `summary` 或 `summary_large_image`，后者显示大图。
+
+  defaultImage:
+	opengraph:
+	  enabled: false # 是否为没有特色图片的页面启用默认 OpenGraph 图片。
+	  local: false # 是否使用本地图片作为 OpenGraph 图片。
+	  src: # 默认 OpenGraph 图片的路径。
+
+  colorScheme:
+	# Display toggle
+	toggle: true  # 是否在页面上显示颜色模式切换按钮。
+
+	# Available values: auto, light, dark
+	default: auto  # 默认的颜色模式。可以选择自动切换（auto），或固定为亮色（light）或暗色（dark）。
+
+  imageProcessing:
+	cover:
+	  enabled: true # 是否为封面图片启用自动处理功能，例如裁剪、缩放等。
+	content:
+	  enabled: true # 是否为内容图片启用自动处理功能。
+
+### Custom menu
+### See https://stack.jimmycai.com/config/menu
+### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter
+menu:
+  main: [] # 自定义主菜单的配置，可以在这里添加导航链接。
+
+  social:
+	- identifier: github # 社交链接的标识符，通常用于指定图标。
+	  name: GitHub # 链接的显示名称。
+	  url: https://github.com/jasonchio-cn # GitHub 个人主页的链接。
+	  params:
+		icon: brand-github # 使用的社交图标，这里是 GitHub 图标。
+
+	- identifier: bilibili
+	  name: Bilibili
+	  url: https://space.bilibili.com/30240401
+	  params:
+		icon: brand-bilibili
+
+	- identifier: email
+	  name: Email
+	  url: mailto:zyb389120217@gmail.com
+	  params:
+		icon: email
+
+related:
+  includeNewer: true  # 是否在相关文章中包含较新的文章。
+  threshold: 60 # 相关文章匹配的相似度阈值，范围是0到100。
+  toLower: false  # 是否将标签和分类转换为小写。
+  indices:
+	- name: tags
+	  weight: 100
+
+	- name: categories
+	  weight: 200
+
+markup:
+  goldmark:
+	extensions:
+	  passthrough:
+		enable: true
+		delimiters:
+		  block:
+			- - \[
+			  - \]
+			- - $$
+			  - $$
+		  inline:
+			- - \(
+			  - \)
+	renderer:
+	  unsafe: true # 如果 Markdown 中包含 HTML 内容，设置为 true 以允许渲染这些 HTML。
+  tableOfContents:
+	endLevel: 4 # 目录生成时的最大标题级别。
+	ordered: true # 目录项是否使用有序列表。
+	startLevel: 2 # 目录生成时的起始标题级别。
+  highlight:
+	noClasses: false # 语法高亮时是否禁用 CSS 类名。
+	codeFences: true # 是否启用代码块语法高亮。
+	guessSyntax: true # 是否自动猜测代码块的语言进行语法高亮。
+	lineNoStart: 1 # 代码行号的起始值。
+	lineNos: true  # 是否在代码块中显示行号。
+	lineNumbersInTable: true # 是否在表格样式中显示行号。
+	tabWidth: 4 # 代码块中 Tab 的宽度（空格数）。
+
+```
+</code></pre></details><h2 id=评论组件>评论组件</h2><p>评论组建博主用的是比较常见的 <a class=link href=https://twikoo.js.org/ target=_blank rel=noopener>twikoo</a>，跟 Hugo 一起通过容器部署。在 Hugo 中对应的配置如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>comments</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>enabled</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w> </span><span class=c># 是否启用评论功能。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>twikoo </span><span class=w> </span><span class=c># 选择的评论源，其他的都可以删掉</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>twikoo</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>envId</span><span class=p>:</span><span class=w> </span><span class=l>http://192.168.123.222:31080</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>lang</span><span class=p>:</span><span class=w> </span><span class=l>zh-CN</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>Docker Compose配置如下</p><details><summary>点击查看 docker-compose 配置</summary><pre><code>``` yaml
+services:
+  hugo:
+    image: hugomods/hugo:exts
+    container_name: hugo
+    hostname: hugo
+    restart: unless-stopped
+    command: server -D
+    # restart: no
+    # command: new site /src --format yaml # format支持json yaml toml
+    ports:
+      - &quot;18099:1313&quot;
+    volumes:
+      - &quot;/mnt/user/appdata/hugo/progressio:/src&quot;  # progressio是项目目录，/src是Hugo默认工作目录
+      - &quot;/mnt/user/appdata/hugo/cache:/tmp/hugo_cache&quot;
+    networks:
+      - hugo
+    environment:
+      - PUID=99
+      - PGID=100
+      - UMASK=000
+      - TZ=Asia/Shanghai
+    healthcheck:
+      test: [&quot;CMD&quot;, &quot;curl&quot;, &quot;-f&quot;, &quot;http://localhost:1313&quot;]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+
+  twikoo:
+    image: imaegoo/twikoo
+    container_name: twikoo
+    hostname: twikoo
+    restart: unless-stopped
+    ports:
+      - &quot;31080:8080&quot;
+    volumes:
+      - &quot;/mnt/user/appdata/twikoo/data:/app/data&quot;
+    networks:
+      - hugo
+    environment:
+      - PUID=99
+      - PGID=100
+      - UMASK=000
+      - TZ=Asia/Shanghai
+      - TWIKOO_THROTTLE=1000
+    healthcheck:
+      test: [&quot;CMD&quot;, &quot;curl&quot;, &quot;-f&quot;, &quot;http://localhost:31080&quot;]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+
+networks:
+  hugo:
+    name: hugo
+    driver: bridge
+```
+</code></pre></details><p>部署、配置完成后，打开任意一个文章，在页面的最下方就能看到评论区了。</p><p><img alt=file-20250416235758472 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p>初次进入需要初始化管理员密码，评论系统的设置可以参考 <a class=link href=https://www.peterjxl.com/Blog/Comment/ target=_blank rel=noopener>评论区 | 从 01 开始</a></p><p><img alt=file-20250416235919969 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><h2 id=总结>总结</h2><p>（AI生成）本文详细介绍了基于 Docker 容器搭建 Hugo 博客并配置 Stack 主题的完整过程。首先，通过复用 Stack 主题的示例配置文件完成基础设置，包括站点的基本信息、语言支持和静态资源路径等。接着，深入讲解了如何自定义配置文件，涵盖多语言支持、评论系统（如 Twikoo）、小部件（如搜索、归档、标签云）以及 SEO 优化等内容。同时，提供了实际部署中需要注意的事项，例如避免渲染错误的目录排除方法。最后，结合 Docker Compose 实现了博客与评论系统的容器化部署。通过本文，读者可以快速上手 Hugo+Stack 主题，打造功能丰富且个性化的个人博客。</p><h2 id=参考链接>参考链接</h2><ol><li><a class=link href=https://www.jianshu.com/p/08b50a9e6ce9 target=_blank rel=noopener>Docker Compose 搭建 Hugo - 简书</a></li><li><a class=link href=https://hugo.opendocs.io/zh-cn/getting-started/quick-start/ target=_blank rel=noopener>快速入门 | Hugo官方文档</a></li><li><a class=link href=https://hyrtee.github.io/2023/start-blog/#%E5%B7%A6%E4%BE%A7%E4%BF%A1%E6%81%AF%E6%A0%8F target=_blank rel=noopener>hugo+Stack 搭建个人博客</a></li><li><a class=link href=https://www.skfwe.cn/p/%E5%8D%9A%E5%AE%A2%E5%88%87%E6%8D%A2%E5%88%B0stack-%E4%B8%BB%E9%A2%98/#%E5%88%87%E6%8D%A2%E4%B8%BB%E9%A2%98 target=_blank rel=noopener>博客切换到STACK 主题</a></li><li><a class=link href=https://brume.top/p/build-your-personal-blog-with-hugo/ target=_blank rel=noopener>从零到一，用 Hugo 打造你的个人网站</a></li><li><a class=link href=https://www.peterjxl.com/Blog/Comment/ target=_blank rel=noopener>评论区 | 从 01 开始</a></li></ol></section><footer class="article-meta article-footer"><section class="article-copyright inline-meta"><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class="article-lastmod inline-meta"><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>2025-04-18 22:41:19</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send,.twikoo .tk-comments-no,.twikoo .el-input__count,.twikoo .tk-submit-action-icon{color:var(--twikoo-body-text-color-main)!important}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://comment.961110.xyz:10010",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2026 JasonChio</section><section class=powerby>间歇性更新 持续性尝试更新<br><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

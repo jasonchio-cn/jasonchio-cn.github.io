@@ -1,0 +1,628 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="【转载】如何搭建 GTA 5 私服 - FiveM 的搭建，相关技术教程和文档"><title>【转载】如何搭建 GTA 5 私服 - FiveM 的搭建</title><link rel=canonical href=https://blog.961110.xyz:10010/post/%E8%BD%AC%E8%BD%BD%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA-gta-5-%E7%A7%81%E6%9C%8D-fivem-%E7%9A%84%E6%90%AD%E5%BB%BA/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="【转载】如何搭建 GTA 5 私服 - FiveM 的搭建"><meta property='og:description' content="【转载】如何搭建 GTA 5 私服 - FiveM 的搭建，相关技术教程和文档"><meta property='og:url' content='https://blog.961110.xyz:10010/post/%E8%BD%AC%E8%BD%BD%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA-gta-5-%E7%A7%81%E6%9C%8D-fivem-%E7%9A%84%E6%90%AD%E5%BB%BA/'><meta property='og:site_name' content='积跬步行千里'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2021-10-23T11:25:00+08:00'><meta property='article:modified_time' content='2021-10-23T11:25:00+08:00'><meta name=twitter:title content="【转载】如何搭建 GTA 5 私服 - FiveM 的搭建"><meta name=twitter:description content="【转载】如何搭建 GTA 5 私服 - FiveM 的搭建，相关技术教程和文档"><script async src="https://www.googletagmanager.com/gtag/js?id=G-YQ9F51F77Q"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YQ9F51F77Q")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src width height class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>积跬步行千里</a></h1><h2 class=site-description>JasonChio</h2></div></header><ol class=menu-social><li><a href=https://space.bilibili.com/30240401 title=Bilibili rel=me><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=mailto:zyb389120217@gmail.com title=Email rel=me><svg class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li><li><a href=https://github.com/jasonchio-cn title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title"></h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ol><li><a href=#windows>Windows</a><ol><li><a href=#前提条件>前提条件:</a></li><li><a href=#安装步骤>安装步骤</a></li></ol></li><li><a href=#linux>Linux</a><ol><li><a href=#启动服务>启动服务</a></li><li><a href=#开机自启>开机自启</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/%E8%BD%AC%E8%BD%BD%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA-gta-5-%E7%A7%81%E6%9C%8D-fivem-%E7%9A%84%E6%90%AD%E5%BB%BA/>【转载】如何搭建 GTA 5 私服 - FiveM 的搭建</a></h2><h3 class=article-subtitle>【转载】如何搭建 GTA 5 私服 - FiveM 的搭建，相关技术教程和文档</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2021-10-23T11:25:00+08:00>2021-10-23</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span></span></div></summary><nav class=toc-nav><ol><li><a href=#windows>Windows</a><ol><li><a href=#前提条件>前提条件:</a></li><li><a href=#安装步骤>安装步骤</a></li></ol></li><li><a href=#linux>Linux</a><ol><li><a href=#启动服务>启动服务</a></li><li><a href=#开机自启>开机自启</a></li></ol></li></ol></nav></details></aside><section class=article-content><blockquote><p>原文地址 <a class=link href=https://leif.fun/articles/2019/11/14/1573715853549.html target=_blank rel=noopener>leif.fun</a></p></blockquote><p>打开官网（<a class=link href=https://fivem.net.cn/ target=_blank rel=noopener>中</a> <a class=link href=https://fivem.net/ target=_blank rel=noopener>英</a>文皆可），点击 <em>下载服务端 (非商业)</em>，如图所示
+<img class=gallery-image data-flex-basis=516px data-flex-grow=215 height=595 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-29f540e4.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-29f540e4_13896247041427024864_hu_15f7fed7cba7ac2c.jpg 800w, https://img.hacpai.com/file/2019/11/image-29f540e4.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1280w" width=1280></p><p>网页跳转到官方说明文档
+<img class=gallery-image data-flex-basis=498px data-flex-grow=207 height=616 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-2949be7b.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-2949be7b_11509155582858138519_hu_948e2eccd025ce29.jpg 800w, https://img.hacpai.com/file/2019/11/image-2949be7b.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1280w" width=1280></p><p>该说明文档提供了安装在 Windows 和 Linux 上的方法，下面逐一介绍。</p><h2 id=windows>Windows</h2><h3 id=前提条件>前提条件:</h3><p>1.<a class=link href=https://aka.ms/vs/16/release/VC_redist.x64.exe target=_blank rel=noopener>Visual C++ Redistributable 2019</a></p><p>2.<a class=link href=https://git-scm.com/download/win target=_blank rel=noopener>Git</a></p><h3 id=安装步骤>安装步骤</h3><ol><li><p>创建新文件夹为<code>D:\FxServer</code>
+<img class=gallery-image data-flex-basis=365px data-flex-grow=152 height=779 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-863a8272.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-863a8272_4629635617283126637_hu_fbaf1a3c40dde8fd.jpg 800w, https://img.hacpai.com/file/2019/11/image-863a8272.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1187w" width=1187></p></li><li><p>下载最新 Windows 端服务器文件：<a class=link href=https://runtime.fivem.net/artifacts/fivem/build_server_windows/master/ target=_blank rel=noopener>artifacts server</a></p></li></ol><p><img class=gallery-image data-flex-basis=454px data-flex-grow=189 height=649 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-579d6bad.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-579d6bad_6710419914083619854_hu_5f790c8d1dcdf464.jpg 800w, https://img.hacpai.com/file/2019/11/image-579d6bad.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1229w" width=1229></p><ol start=3><li><p>解压下载的服务器文件到<code>FxServer</code>文件夹中
+<img class=gallery-image data-flex-basis=368px data-flex-grow=153 height=775 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-5d5a8984.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-5d5a8984_17391317165622475892_hu_625fc11b09bfedb8.jpg 800w, https://img.hacpai.com/file/2019/11/image-5d5a8984.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1189w" width=1189></p></li><li><p>克隆 <a class=link href=https://github.com/citizenfx/cfx-server-data target=_blank rel=noopener>cfx-server-data</a> 到<code>D:\FxServer</code>中，并重名名为<code>server-data</code>，且与服务器文件夹<code>server</code>同级. 命令：<code>git clone https://github.com/citizenfx/cfx-server-data.git server-data</code>
+<img class=gallery-image data-flex-basis=554px data-flex-grow=231 height=553 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-1a91e8d5.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-1a91e8d5_17067527716291748147_hu_e9da988ae040b9fb.jpg 800w, https://img.hacpai.com/file/2019/11/image-1a91e8d5.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1278w" width=1278></p></li></ol><p><img class=gallery-image data-flex-basis=367px data-flex-grow=153 height=776 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-5f964c0d.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-5f964c0d_16959190961374084941_hu_a73ffce0e0a3e7ee.jpg 800w, https://img.hacpai.com/file/2019/11/image-5f964c0d.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1189w" width=1189></p><ol start=5><li>在<code>server-data</code>文件夹下创建<code>server.cfg</code>配置文件，文件内容来自 <a class=link href=https://docs.fivem.net/server-manual/setting-up-a-server/#servercfgexample target=_blank rel=noopener>example server.cfg</a>, 内容如下：</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=c1># Only change the IP if you&#39;re using a server with multiple network interfaces, otherwise change the port only.</span>
+</span></span><span class=line><span class=cl><span class=n>endpoint_add_tcp</span> <span class=s2>&#34;0.0.0.0:30120&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>endpoint_add_udp</span> <span class=s2>&#34;0.0.0.0:30120&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># These resources will start by default.</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>mapmanager</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>chat</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>spawnmanager</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>sessionmanager</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>fivem</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>hardcap</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>rconlog</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>scoreboard</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># This allows players to use scripthook-based plugins such as the legacy Lambda Menu.</span>
+</span></span><span class=line><span class=cl><span class=c1># Set this to 1 to allow scripthook. Do note that this does _not_ guarantee players won&#39;t be able to use external plugins.</span>
+</span></span><span class=line><span class=cl><span class=n>sv_scriptHookAllowed</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Uncomment this and set a password to enable RCON. Make sure to change the password - it should look like rcon_password &#34;YOURPASSWORD&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#rcon_password &#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># A comma-separated list of tags for your server.</span>
+</span></span><span class=line><span class=cl><span class=c1># For example:</span>
+</span></span><span class=line><span class=cl><span class=c1># - sets tags &#34;drifting, cars, racing&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># Or:</span>
+</span></span><span class=line><span class=cl><span class=c1># - sets tags &#34;roleplay, military, tanks&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>sets</span> <span class=n>tags</span> <span class=s2>&#34;default&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># A valid locale identifier for your server&#39;s primary language.</span>
+</span></span><span class=line><span class=cl><span class=c1># For example &#34;en-US&#34;, &#34;fr-CA&#34;, &#34;nl-NL&#34;, &#34;de-DE&#34;, &#34;en-GB&#34;, &#34;pt-BR&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>sets</span> <span class=n>locale</span> <span class=s2>&#34;root-AQ&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># please DO replace root-AQ on the line ABOVE with a real language! :)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Set an optional server info and connecting banner image url.</span>
+</span></span><span class=line><span class=cl><span class=c1># Size doesn&#39;t matter, any banner sized image will be fine.</span>
+</span></span><span class=line><span class=cl><span class=c1>#sets banner_detail &#34;https://url.to/image.png&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#sets banner_connecting &#34;https://url.to/image.png&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Set your server&#39;s hostname</span>
+</span></span><span class=line><span class=cl><span class=n>sv_hostname</span> <span class=s2>&#34;FXServer, but unconfigured&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Nested configs!</span>
+</span></span><span class=line><span class=cl><span class=c1>#exec server_internal.cfg</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Loading a server icon (96x96 PNG file)</span>
+</span></span><span class=line><span class=cl><span class=c1>#load_server_icon myLogo.png</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># convars which can be used in scripts</span>
+</span></span><span class=line><span class=cl><span class=n>set</span> <span class=n>temp_convar</span> <span class=s2>&#34;hey world!&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Uncomment this line if you do not want your server to be listed in the server browser.</span>
+</span></span><span class=line><span class=cl><span class=c1># Do not edit it if you *do* want your server listed.</span>
+</span></span><span class=line><span class=cl><span class=c1>#sv_master1 &#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Add system admins</span>
+</span></span><span class=line><span class=cl><span class=n>add_ace</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=n>command</span> <span class=n>allow</span> <span class=c1># allow all commands</span>
+</span></span><span class=line><span class=cl><span class=n>add_ace</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=n>command</span><span class=o>.</span><span class=n>quit</span> <span class=n>deny</span> <span class=c1># but don&#39;t allow quit</span>
+</span></span><span class=line><span class=cl><span class=n>add_principal</span> <span class=n>identifier</span><span class=o>.</span><span class=n>fivem</span><span class=p>:</span><span class=mi>1</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=c1># add the admin to the group</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Hide player endpoints in external log output.</span>
+</span></span><span class=line><span class=cl><span class=n>sv_endpointprivacy</span> <span class=bp>true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Server player slot limit (must be between 1 and 32, unless using OneSync)</span>
+</span></span><span class=line><span class=cl><span class=n>sv_maxclients</span> <span class=mi>32</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Steam Web API key, if you want to use Steam authentication (https://steamcommunity.com/dev/apikey)</span>
+</span></span><span class=line><span class=cl><span class=c1># -&gt; replace &#34;&#34; with the key</span>
+</span></span><span class=line><span class=cl><span class=n>set</span> <span class=n>steam_webApiKey</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># License key for your server (https://keymaster.fivem.net)</span>
+</span></span><span class=line><span class=cl><span class=n>sv_licenseKey</span> <span class=n>changeme</span>
+</span></span></code></pre></td></tr></table></div></div><p>中文解释：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=c1># 一般情况下不用修改!</span>
+</span></span><span class=line><span class=cl><span class=c1># 只有使用多个服务器协议的时候才需要更改。默认的TCP和UDP端口为30120</span>
+</span></span><span class=line><span class=cl><span class=n>endpoint_add_tcp</span> <span class=s2>&#34;0.0.0.0:30120&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>endpoint_add_udp</span> <span class=s2>&#34;0.0.0.0:30120&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 默认启动资源。</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>mapmanager</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>chat</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>spawnmanager</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>sessionmanager</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>fivem</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>hardcap</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>rconlog</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>scoreboard</span>
+</span></span><span class=line><span class=cl><span class=n>start</span> <span class=n>playernames</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 允许玩家使用scripthook挂载的修改器，例如lambda菜单。</span>
+</span></span><span class=line><span class=cl><span class=c1># 设置为0可以禁用。</span>
+</span></span><span class=line><span class=cl><span class=n>sv_scriptHookAllowed</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 取消前面的#可以启动RCON，记住你更改的密码。</span>
+</span></span><span class=line><span class=cl><span class=c1>#rcon_password changeme			#一般用不到</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 服务器标签，中间用逗号隔开</span>
+</span></span><span class=line><span class=cl><span class=c1># 例如：</span>
+</span></span><span class=line><span class=cl><span class=c1># - sets tags &#34;drifting, cars, racing&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># 或者：</span>
+</span></span><span class=line><span class=cl><span class=c1># - sets tags &#34;roleplay, military, tanks&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>sets</span> <span class=n>tags</span> <span class=s2>&#34;default&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 设置服务器横幅或者链接横幅的URL</span>
+</span></span><span class=line><span class=cl><span class=c1># 大小没有限制，任何图像都可以.</span>
+</span></span><span class=line><span class=cl><span class=c1>#sets banner_detail &#34;http://url.to/image.png&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#sets banner_connecting &#34;http://url.to/image.png&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 设置服务器名称</span>
+</span></span><span class=line><span class=cl><span class=n>sv_hostname</span> <span class=s2>&#34;My new FXServer!&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 嵌套配置！一般不改。</span>
+</span></span><span class=line><span class=cl><span class=c1>#exec server_internal.cfg</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 服务器LOGO图标 (96x96 PNG文件)</span>
+</span></span><span class=line><span class=cl><span class=c1>#load_server_icon myLogo.png</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 可以在脚本中使用的封面。</span>
+</span></span><span class=line><span class=cl><span class=n>set</span> <span class=n>temp_convar</span> <span class=s2>&#34;hey world!&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># #如果你不想服务器显示在FiveM网页服务器列表，可以把#号删掉。</span>
+</span></span><span class=line><span class=cl><span class=c1>#sv_master1 &#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 只能让Steam或者第三方运营商进入你的FiveM服务器?</span>
+</span></span><span class=line><span class=cl><span class=c1># 不要忘记Social Club也是第三方提供商!</span>
+</span></span><span class=line><span class=cl><span class=c1># 一般不改</span>
+</span></span><span class=line><span class=cl><span class=c1>#sv_authMaxVariance 1</span>
+</span></span><span class=line><span class=cl><span class=c1>#sv_authMinTrust 5</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 添加系统管理员。</span>
+</span></span><span class=line><span class=cl><span class=n>add_ace</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=n>command</span> <span class=n>allow</span> <span class=c1># allow all commands</span>
+</span></span><span class=line><span class=cl><span class=n>add_ace</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=n>command</span><span class=o>.</span><span class=n>quit</span> <span class=n>deny</span> <span class=c1># but don&#39;t allow quit</span>
+</span></span><span class=line><span class=cl><span class=n>add_principal</span> <span class=n>identifier</span><span class=o>.</span><span class=n>steam</span><span class=p>:</span><span class=mi>1</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=c1># add the admin to the group</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 在外部输出日志上不显示玩家的信息。</span>
+</span></span><span class=line><span class=cl><span class=n>sv_endpointprivacy</span> <span class=bp>true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 服务器人数设置 (必须在 1 到 32)</span>
+</span></span><span class=line><span class=cl><span class=n>sv_maxclients</span> <span class=mi>32</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 服务器密钥 (https://keymaster.fivem.net)</span>
+</span></span><span class=line><span class=cl><span class=n>sv_licenseKey</span> <span class=n>changeme</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>需要修改的几项有：
+<em>sv_hostname</em>：服务器名称，随便写
+<em>load_server_icon</em>：服务器列表显示的图标，去掉 #表示开启，自定义图片必须是 96x96 分辨率的 png 图片而且放在<code>server-data</code>目录中与配置文件同级目录
+<em>add_principal identifier.steam</em>: 根据注册的账号 ID 添加管理员</p></blockquote><ol start=6><li><p>去 <a class=link href=https://forum.fivem.net/ target=_blank rel=noopener>FiveM 论坛</a>注册账户</p></li><li><p>再去获取<a class=link href=https://keymaster.fivem.net/ target=_blank rel=noopener>服务器密钥</a>（序列号申请次数无上限）
+<img class=gallery-image data-flex-basis=752px data-flex-grow=313 height=363 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-4d7563f5.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-4d7563f5_16340331489243379823_hu_1cf578c96062d59d.jpg 800w, https://img.hacpai.com/file/2019/11/image-4d7563f5.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1138w" width=1138></p></li></ol><p><img class=gallery-image data-flex-basis=205px data-flex-grow=85 height=647 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-f00d3b0f.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 width=554></p><ol start=8><li><p>申请序列号之后将<code>server.cfg</code>配置文件最后一项的<code>changeme</code>部分替换成上一步申请的序列号即可
+<img class=gallery-image data-flex-basis=273px data-flex-grow=113 height=967 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-f0df0149.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-f0df0149_16539113265009915394_hu_688dfed1e8f85d3b.jpg 800w, https://img.hacpai.com/file/2019/11/image-f0df0149.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1101w" width=1101></p></li><li><p>打开终端，输入下面两句命令即可启动 FiveM 服务器：</p></li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cd  /d D:\FXServer\server-data
+</span></span><span class=line><span class=cl>D:\FXServer\server\run.cmd +exec server.cfg
+</span></span></code></pre></td></tr></table></div></div><p><img class=gallery-image data-flex-basis=507px data-flex-grow=211 height=605 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-92cad1ac.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-92cad1ac_4206496291877482796_hu_2e58d7c9570bf1be.jpg 800w, https://img.hacpai.com/file/2019/11/image-92cad1ac.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1280w" width=1280></p><blockquote><p>注意：若觉得每次启动服务器麻烦，可以新建一个 bat 文件，将上述两句命令粘贴进去，每次启动服务器的时候双击 bat 文件即可</p></blockquote><h2 id=linux>Linux</h2><p>由于 Linux 搭建方法与 Windows 大同小异，故整理了一个自动化部署脚本</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=c1>#下载服务器文件</span>
+</span></span><span class=line><span class=cl><span class=n>wget</span> <span class=n>https</span><span class=p>:</span><span class=o>//</span><span class=n>runtime</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=o>/</span><span class=n>artifacts</span><span class=o>/</span><span class=n>fivem</span><span class=o>/</span><span class=n>build_proot_linux</span><span class=o>/</span><span class=n>master</span><span class=o>/</span><span class=mi>1688</span><span class=o>-</span><span class=n>c814f804e64c28952269bc5abbac92d7c956f844</span><span class=o>/</span><span class=n>fx</span><span class=o>.</span><span class=n>tar</span><span class=o>.</span><span class=n>xz</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#下载资源文件</span>
+</span></span><span class=line><span class=cl><span class=n>git</span> <span class=n>clone</span> <span class=n>https</span><span class=p>:</span><span class=o>//</span><span class=n>github</span><span class=o>.</span><span class=n>com</span><span class=o>/</span><span class=n>citizenfx</span><span class=o>/</span><span class=n>cfx</span><span class=o>-</span><span class=n>server</span><span class=o>-</span><span class=n>data</span><span class=o>.</span><span class=n>git</span> <span class=n>server</span><span class=o>-</span><span class=n>data</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#创建文件夹</span>
+</span></span><span class=line><span class=cl><span class=n>mkdir</span> <span class=o>-</span><span class=n>p</span> <span class=o>/</span><span class=n>usr</span><span class=o>/</span><span class=n>local</span><span class=o>/</span><span class=n>src</span><span class=o>/</span><span class=n>FiveM</span><span class=o>/</span><span class=n>server</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#解压服务器文件到指定文件夹</span>
+</span></span><span class=line><span class=cl><span class=n>tar</span> <span class=o>-</span><span class=n>xf</span> <span class=n>fx</span><span class=o>.</span><span class=n>tar</span><span class=o>.</span><span class=n>xz</span> <span class=o>-</span><span class=n>C</span> <span class=o>/</span><span class=n>usr</span><span class=o>/</span><span class=n>local</span><span class=o>/</span><span class=n>src</span><span class=o>/</span><span class=n>FiveM</span><span class=o>/</span><span class=n>server</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#复制资源文件到指定文件夹</span>
+</span></span><span class=line><span class=cl><span class=n>cp</span> <span class=o>-</span><span class=n>r</span> <span class=n>server</span><span class=o>-</span><span class=n>data</span> <span class=o>/</span><span class=n>usr</span><span class=o>/</span><span class=n>local</span><span class=o>/</span><span class=n>src</span><span class=o>/</span><span class=n>FiveM</span><span class=o>/</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#创建配置文件</span>
+</span></span><span class=line><span class=cl><span class=n>cat</span> <span class=o>&lt;&lt;</span><span class=n>EOF</span> <span class=o>&gt;/</span><span class=n>usr</span><span class=o>/</span><span class=n>local</span><span class=o>/</span><span class=n>src</span><span class=o>/</span><span class=n>FiveM</span><span class=o>/</span><span class=n>server</span><span class=o>-</span><span class=n>data</span><span class=o>/</span><span class=n>server</span><span class=o>.</span><span class=n>cfg</span>
+</span></span><span class=line><span class=cl><span class=c1># Only change the IP if you&#39;re using a server with multiple network interfaces, otherwise change the port only.</span>
+</span></span><span class=line><span class=cl><span class=n>endpoint_add_tcp</span> <span class=s2>&#34;0.0.0.0:30120&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>endpoint_add_udp</span> <span class=s2>&#34;0.0.0.0:30120&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># These resources will start by default.</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>mapmanager</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>chat</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>spawnmanager</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>sessionmanager</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>fivem</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>hardcap</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>rconlog</span>
+</span></span><span class=line><span class=cl><span class=n>ensure</span> <span class=n>scoreboard</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># This allows players to use scripthook-based plugins such as the legacy Lambda Menu.</span>
+</span></span><span class=line><span class=cl><span class=c1># Set this to 1 to allow scripthook. Do note that this does _not_ guarantee players won&#39;t be able to use external plugins.</span>
+</span></span><span class=line><span class=cl><span class=n>sv_scriptHookAllowed</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Uncomment this and set a password to enable RCON. Make sure to change the password - it should look like rcon_password &#34;YOURPASSWORD&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#rcon_password &#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># A comma-separated list of tags for your server.</span>
+</span></span><span class=line><span class=cl><span class=c1># For example:</span>
+</span></span><span class=line><span class=cl><span class=c1># - sets tags &#34;drifting, cars, racing&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># Or:</span>
+</span></span><span class=line><span class=cl><span class=c1># - sets tags &#34;roleplay, military, tanks&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>sets</span> <span class=n>tags</span> <span class=s2>&#34;default&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># A valid locale identifier for your server&#39;s primary language.</span>
+</span></span><span class=line><span class=cl><span class=c1># For example &#34;en-US&#34;, &#34;fr-CA&#34;, &#34;nl-NL&#34;, &#34;de-DE&#34;, &#34;en-GB&#34;, &#34;pt-BR&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>sets</span> <span class=n>locale</span> <span class=s2>&#34;root-AQ&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># please DO replace root-AQ on the line ABOVE with a real language! :)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Set an optional server info and connecting banner image url.</span>
+</span></span><span class=line><span class=cl><span class=c1># Size doesn&#39;t matter, any banner sized image will be fine.</span>
+</span></span><span class=line><span class=cl><span class=c1>#sets banner_detail &#34;https://url.to/image.png&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#sets banner_connecting &#34;https://url.to/image.png&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Set your server&#39;s hostname</span>
+</span></span><span class=line><span class=cl><span class=n>sv_hostname</span> <span class=s2>&#34;FXServer, but unconfigured&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Nested configs!</span>
+</span></span><span class=line><span class=cl><span class=c1>#exec server_internal.cfg</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Loading a server icon (96x96 PNG file)</span>
+</span></span><span class=line><span class=cl><span class=c1>#load_server_icon myLogo.png</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># convars which can be used in scripts</span>
+</span></span><span class=line><span class=cl><span class=n>set</span> <span class=n>temp_convar</span> <span class=s2>&#34;hey world!&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Uncomment this line if you do not want your server to be listed in the server browser.</span>
+</span></span><span class=line><span class=cl><span class=c1># Do not edit it if you *do* want your server listed.</span>
+</span></span><span class=line><span class=cl><span class=c1>#sv_master1 &#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Add system admins</span>
+</span></span><span class=line><span class=cl><span class=n>add_ace</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=n>command</span> <span class=n>allow</span> <span class=c1># allow all commands</span>
+</span></span><span class=line><span class=cl><span class=n>add_ace</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=n>command</span><span class=o>.</span><span class=n>quit</span> <span class=n>deny</span> <span class=c1># but don&#39;t allow quit</span>
+</span></span><span class=line><span class=cl><span class=n>add_principal</span> <span class=n>identifier</span><span class=o>.</span><span class=n>fivem</span><span class=p>:</span><span class=mi>1</span> <span class=n>group</span><span class=o>.</span><span class=n>admin</span> <span class=c1># add the admin to the group</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Hide player endpoints in external log output.</span>
+</span></span><span class=line><span class=cl><span class=n>sv_endpointprivacy</span> <span class=bp>true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Server player slot limit (must be between 1 and 32, unless using OneSync)</span>
+</span></span><span class=line><span class=cl><span class=n>sv_maxclients</span> <span class=mi>32</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Steam Web API key, if you want to use Steam authentication (https://steamcommunity.com/dev/apikey)</span>
+</span></span><span class=line><span class=cl><span class=c1># -&gt; replace &#34;&#34; with the key</span>
+</span></span><span class=line><span class=cl><span class=n>set</span> <span class=n>steam_webApiKey</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># License key for your server (https://keymaster.fivem.net)</span>
+</span></span><span class=line><span class=cl><span class=n>sv_licenseKey</span> <span class=n>changeme</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>EOF</span>
+</span></span></code></pre></td></tr></table></div></div><p>将脚本中的<code>changeme</code>替换成服务器密钥即可部署</p><h3 id=启动服务>启动服务</h3><p>使用如下命令启动：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cd /usr/local/src/FiveM/server-data
+</span></span><span class=line><span class=cl>/usr/local/src/FiveM/server/run.sh +exec server.cfg
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>切记，不可用<code>/usr/local/src/FiveM/server/run.sh +exec /usr/local/src/FiveM/server-data/server.cfg</code>命令启动，会失败，具体原因未知</p></blockquote><h3 id=开机自启>开机自启</h3><p>为了做到开机自启，我采用了 Supervisor 的方式 (使用 systemctl 方式会无限重启，原因未知)：
+先创建一个启动服务的脚本<code>/usr/local/src/FiveM/start.sh</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cd /usr/local/src/FiveM/server-data &amp;&amp; /usr/local/src/FiveM/server/run.sh +exec server.cfg
+</span></span></code></pre></td></tr></table></div></div><p>然后在 Supervisor 的配置文件夹<code>/etc/supervisor/conf.d/</code>中新建 FiveM 的启动文件<code>fivem.conf</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=p>[</span><span class=n>program</span><span class=p>:</span><span class=n>fivem</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>command</span><span class=o>=/</span><span class=n>usr</span><span class=o>/</span><span class=n>bin</span><span class=o>/</span><span class=n>bash</span> <span class=o>/</span><span class=n>usr</span><span class=o>/</span><span class=n>local</span><span class=o>/</span><span class=n>src</span><span class=o>/</span><span class=n>FiveM</span><span class=o>/</span><span class=n>start</span><span class=o>.</span><span class=n>sh</span>
+</span></span><span class=line><span class=cl><span class=n>directory</span><span class=o>=/</span><span class=n>usr</span><span class=o>/</span><span class=n>local</span><span class=o>/</span><span class=n>src</span><span class=o>/</span><span class=n>FiveM</span>
+</span></span><span class=line><span class=cl><span class=n>user</span><span class=o>=</span><span class=n>root</span>
+</span></span><span class=line><span class=cl><span class=n>stdout_logfile</span><span class=o>=/</span><span class=k>var</span><span class=o>/</span><span class=nb>log</span><span class=o>/</span><span class=n>fivem</span><span class=o>.</span><span class=n>log</span>
+</span></span><span class=line><span class=cl><span class=n>autostart</span><span class=o>=</span><span class=bp>true</span>
+</span></span><span class=line><span class=cl><span class=n>autorestart</span><span class=o>=</span><span class=bp>true</span>
+</span></span><span class=line><span class=cl><span class=n>redirect_stderr</span><span class=o>=</span><span class=bp>true</span>
+</span></span><span class=line><span class=cl><span class=n>stopsignal</span><span class=o>=</span><span class=n>QUIT</span>
+</span></span></code></pre></td></tr></table></div></div><p>最后使用<code>supervisorctl reload</code>，选择<code>y</code>即可开机自启 FiveM 服务</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[root@centos ~]# supervisorctl status
+</span></span><span class=line><span class=cl>fivem                            RUNNING   pid 3316, uptime 5:24:59
+</span></span></code></pre></td></tr></table></div></div><p>实时日志如下 (每三分钟发一次心跳)：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=p>[</span><span class=n>root</span><span class=err>@</span><span class=n>centos</span> <span class=o>~</span><span class=p>]</span><span class=c1># tail /var/log/fivem.log -f</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span><span class=line><span class=cl><span class=n>Sending</span> <span class=n>heartbeat</span> <span class=n>to</span> <span class=n>live</span><span class=o>-</span><span class=n>internal</span><span class=o>.</span><span class=n>fivem</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>30110</span>
+</span></span></code></pre></td></tr></table></div></div><p>连接情况 (若是云服务器或者是非本机的电脑需要添加 30120 的 TCP 和 UDP 入站规则)：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=p>[</span><span class=n>root</span><span class=err>@</span><span class=n>VM_0_7_centos</span> <span class=o>~</span><span class=p>]</span><span class=c1># lsof -i:30120</span>
+</span></span><span class=line><span class=cl><span class=n>COMMAND</span>    <span class=n>PID</span> <span class=n>USER</span>   <span class=n>FD</span>   <span class=n>TYPE</span>   <span class=n>DEVICE</span> <span class=n>SIZE</span><span class=o>/</span><span class=n>OFF</span> <span class=n>NODE</span> <span class=n>NAME</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>28</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36571478</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>150.116</span><span class=o>.</span><span class=mf>85.124</span><span class=p>:</span><span class=mi>55130</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>31</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36470180</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=o>*</span><span class=p>:</span><span class=mi>30120</span> <span class=p>(</span><span class=n>LISTEN</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>33</span><span class=n>u</span>  <span class=n>IPv6</span> <span class=mi>36470181</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>UDP</span> <span class=o>*</span><span class=p>:</span><span class=mi>30120</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>35</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36476879</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>201.75</span><span class=o>.</span><span class=mf>45.121</span><span class=p>:</span><span class=mi>52624</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>36</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36477004</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>67.166</span><span class=o>.</span><span class=mf>27.29</span><span class=p>:</span><span class=mi>57882</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>37</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36509773</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>adria</span><span class=o>.</span><span class=n>kvarteto</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>50084</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>38</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36483951</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>cable</span><span class=o>-</span><span class=mi>188</span><span class=o>-</span><span class=mi>2</span><span class=o>-</span><span class=mi>205</span><span class=o>-</span><span class=mf>27.</span><span class=n>dynamic</span><span class=o>.</span><span class=n>sbb</span><span class=o>.</span><span class=n>rs</span><span class=p>:</span><span class=mi>52447</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>39</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36484090</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>49.230</span><span class=o>.</span><span class=mf>56.194</span><span class=p>:</span><span class=mi>50631</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>40</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36571801</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>176.148</span><span class=o>.</span><span class=mf>208.253</span><span class=p>:</span><span class=mi>58608</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>41</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36484632</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>179.219</span><span class=o>.</span><span class=mf>232.155</span><span class=p>:</span><span class=mi>55005</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>42</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36488632</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>client</span><span class=o>-</span><span class=mf>201.230</span><span class=o>.</span><span class=mf>158.233</span><span class=o>.</span><span class=n>speedy</span><span class=o>.</span><span class=n>net</span><span class=o>.</span><span class=n>pe</span><span class=p>:</span><span class=mi>13723</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>43</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36489318</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>112.201</span><span class=o>.</span><span class=mf>139.65</span><span class=o>.</span><span class=n>pldt</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=n>ema</span><span class=o>-</span><span class=n>sent</span><span class=o>-</span><span class=n>lm</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>44</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36504202</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>cpc69049</span><span class=o>-</span><span class=n>oxfd25</span><span class=o>-</span><span class=mi>2</span><span class=o>-</span><span class=mi>0</span><span class=o>-</span><span class=n>cust839</span><span class=o>.</span><span class=mi>4</span><span class=o>-</span><span class=mf>3.</span><span class=n>cable</span><span class=o>.</span><span class=n>virginm</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>55972</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>45</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36509900</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>106.203</span><span class=o>.</span><span class=mf>63.106</span><span class=p>:</span><span class=mi>64732</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>46</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36490560</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>177.155</span><span class=o>.</span><span class=mf>219.25</span><span class=p>:</span><span class=mi>58726</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>47</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36510686</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>187.21</span><span class=o>.</span><span class=mf>113.230</span><span class=p>:</span><span class=mi>51463</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>48</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36509557</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>pc</span><span class=o>-</span><span class=mi>252</span><span class=o>-</span><span class=mi>52</span><span class=o>-</span><span class=mi>100</span><span class=o>-</span><span class=mf>190.</span><span class=n>cm</span><span class=o>.</span><span class=n>vtr</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>50904</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>49</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36492966</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>170.254</span><span class=o>.</span><span class=mf>133.248</span><span class=p>:</span><span class=mi>4657</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>50</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36512199</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mi>93</span><span class=o>-</span><span class=mi>86</span><span class=o>-</span><span class=mi>107</span><span class=o>-</span><span class=mf>145.</span><span class=n>dynamic</span><span class=o>.</span><span class=n>isp</span><span class=o>.</span><span class=n>telekom</span><span class=o>.</span><span class=n>rs</span><span class=p>:</span><span class=mi>58530</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>51</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36523715</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>c</span><span class=o>-</span><span class=mi>71</span><span class=o>-</span><span class=mi>193</span><span class=o>-</span><span class=mi>90</span><span class=o>-</span><span class=mf>215.</span><span class=n>hsd1</span><span class=o>.</span><span class=n>mn</span><span class=o>.</span><span class=n>comcast</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>64846</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>52</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36515098</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>37.236</span><span class=o>.</span><span class=mf>124.65</span><span class=p>:</span><span class=mi>60517</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>53</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36524821</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>ppp</span><span class=o>-</span><span class=mi>223</span><span class=o>-</span><span class=mi>24</span><span class=o>-</span><span class=mi>144</span><span class=o>-</span><span class=mf>28.</span><span class=n>revip6</span><span class=o>.</span><span class=n>asianet</span><span class=o>.</span><span class=n>co</span><span class=o>.</span><span class=n>th</span><span class=p>:</span><span class=mi>11693</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>54</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36522366</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>c</span><span class=o>-</span><span class=mi>98</span><span class=o>-</span><span class=mi>192</span><span class=o>-</span><span class=mi>236</span><span class=o>-</span><span class=mf>150.</span><span class=n>hsd1</span><span class=o>.</span><span class=n>de</span><span class=o>.</span><span class=n>comcast</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>58986</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>55</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36522517</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>190.200</span><span class=o>.</span><span class=mf>255.39</span><span class=p>:</span><span class=mi>17832</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>56</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36525992</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>cm</span><span class=o>-</span><span class=mi>27</span><span class=o>-</span><span class=mi>145</span><span class=o>-</span><span class=mi>135</span><span class=o>-</span><span class=mf>149.</span><span class=n>revip12</span><span class=o>.</span><span class=n>asianet</span><span class=o>.</span><span class=n>co</span><span class=o>.</span><span class=n>th</span><span class=p>:</span><span class=mi>52631</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>57</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36531724</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>73.126</span><span class=o>.</span><span class=mf>70.158</span><span class=p>:</span><span class=mi>50722</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>58</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36555357</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>cpc139088</span><span class=o>-</span><span class=n>jarr15</span><span class=o>-</span><span class=mi>2</span><span class=o>-</span><span class=mi>0</span><span class=o>-</span><span class=n>cust109</span><span class=o>.</span><span class=mi>16</span><span class=o>-</span><span class=mf>2.</span><span class=n>cable</span><span class=o>.</span><span class=n>virginm</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>52928</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>59</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36531740</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=n>c</span><span class=o>-</span><span class=mi>174</span><span class=o>-</span><span class=mi>50</span><span class=o>-</span><span class=mi>61</span><span class=o>-</span><span class=mf>97.</span><span class=n>hsd1</span><span class=o>.</span><span class=n>la</span><span class=o>.</span><span class=n>comcast</span><span class=o>.</span><span class=n>net</span><span class=p>:</span><span class=mi>52188</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>60</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36551137</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>187.21</span><span class=o>.</span><span class=mf>84.137</span><span class=p>:</span><span class=mi>65142</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>61</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36555172</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>77.202</span><span class=o>.</span><span class=mf>162.69</span><span class=p>:</span><span class=mi>54845</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>ld</span><span class=o>-</span><span class=n>musl</span><span class=o>-</span><span class=n>x</span> <span class=mi>3317</span> <span class=n>root</span>   <span class=mi>62</span><span class=n>u</span>  <span class=n>IPv4</span> <span class=mi>36563973</span>      <span class=mi>0</span><span class=n>t0</span>  <span class=n>TCP</span> <span class=n>VM_0_7_centos</span><span class=p>:</span><span class=mi>30120</span><span class=o>-&gt;</span><span class=mf>199.199</span><span class=o>.</span><span class=mf>246.200</span><span class=p>:</span><span class=mi>63485</span> <span class=p>(</span><span class=n>ESTABLISHED</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>注意：因为我是放在云服务器上的，所以刚搭建完没多久就有客户端连接上来了</p></blockquote><p>资源占用情况：
+<img class=gallery-image data-flex-basis=1330px data-flex-grow=554 height=227 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src=https://img.hacpai.com/file/2019/11/image-cfe46be4.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 srcset="/image-cfe46be4_1767953587708016067_hu_2d33ddab7a052ccf.jpg 800w, https://img.hacpai.com/file/2019/11/image-cfe46be4.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100 1258w" width=1258></p></section><footer class="article-meta article-footer"><section class="article-copyright inline-meta"><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send,.twikoo .tk-comments-no,.twikoo .el-input__count,.twikoo .tk-submit-action-icon{color:var(--twikoo-body-text-color-main)!important}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://comment.961110.xyz:10010",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2026 JasonChio</section><section class=powerby>间歇性更新 持续性尝试更新<br><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

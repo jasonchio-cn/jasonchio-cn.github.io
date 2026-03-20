@@ -1,0 +1,302 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行，相关技术教程和文档"><title>Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行</title><link rel=canonical href=https://blog.961110.xyz:10010/post/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%BA%8C-docker-run-%E5%91%BD%E4%BB%A4%E5%9C%A8-docker-daemon%E4%B8%AD%E7%9A%84%E6%89%A7%E8%A1%8C/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行"><meta property='og:description' content="Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行，相关技术教程和文档"><meta property='og:url' content='https://blog.961110.xyz:10010/post/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%BA%8C-docker-run-%E5%91%BD%E4%BB%A4%E5%9C%A8-docker-daemon%E4%B8%AD%E7%9A%84%E6%89%A7%E8%A1%8C/'><meta property='og:site_name' content='积跬步行千里'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2021-11-17T22:00:00+08:00'><meta property='article:modified_time' content='2021-12-06T20:10:00+08:00'><meta name=twitter:title content="Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行"><meta name=twitter:description content="Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行，相关技术教程和文档"><script async src="https://www.googletagmanager.com/gtag/js?id=G-YQ9F51F77Q"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YQ9F51F77Q")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src width height class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>积跬步行千里</a></h1><h2 class=site-description>JasonChio</h2></div></header><ol class=menu-social><li><a href=https://space.bilibili.com/30240401 title=Bilibili rel=me><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=mailto:zyb389120217@gmail.com title=Email rel=me><svg class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li><li><a href=https://github.com/jasonchio-cn title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title"></h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ol><li><a href=#前言>前言</a></li><li><a href=#docker-daemon-处理-docker-client-请求的过程>Docker Daemon 处理 Docker Client 请求的过程</a><ol><li><a href=#initrouteropts-routeroptions>initRouter(opts routerOptions)</a></li><li><a href=#newrouterb-backend-decoder-httputilscontainerdecoder>NewRouter(b Backend, decoder httputils.ContainerDecoder)</a></li><li><a href=#func-r-containerrouter-initroutes>func (r *containerRouter) initRoutes()</a></li></ol></li><li><a href=#docker-daemon-处理创建容器的请求流程>Docker Daemon 处理创建容器的请求流程</a><ol><li><a href=#postcontainerscreate>postContainersCreate</a></li><li><a href=#containercreateopts-createopts>containerCreate(opts createOpts)</a></li><li><a href=#func-daemon-daemon-createopts-createopts>func (daemon *Daemon) create(opts createOpts)</a></li><li><a href=#daemonnewcontainer>daemon.newContainer()</a></li></ol></li><li><a href=#参考链接>参考链接</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E4%BA%8C-docker-run-%E5%91%BD%E4%BB%A4%E5%9C%A8-docker-daemon%E4%B8%AD%E7%9A%84%E6%89%A7%E8%A1%8C/>Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行</a></h2><h3 class=article-subtitle>Docker源码分析（二）—— docker run 命令在 Docker Daemon中的执行，相关技术教程和文档</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2021-11-17T22:00:00+08:00>2021-11-17</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span></span></div></summary><nav class=toc-nav><ol><li><a href=#前言>前言</a></li><li><a href=#docker-daemon-处理-docker-client-请求的过程>Docker Daemon 处理 Docker Client 请求的过程</a><ol><li><a href=#initrouteropts-routeroptions>initRouter(opts routerOptions)</a></li><li><a href=#newrouterb-backend-decoder-httputilscontainerdecoder>NewRouter(b Backend, decoder httputils.ContainerDecoder)</a></li><li><a href=#func-r-containerrouter-initroutes>func (r *containerRouter) initRoutes()</a></li></ol></li><li><a href=#docker-daemon-处理创建容器的请求流程>Docker Daemon 处理创建容器的请求流程</a><ol><li><a href=#postcontainerscreate>postContainersCreate</a></li><li><a href=#containercreateopts-createopts>containerCreate(opts createOpts)</a></li><li><a href=#func-daemon-daemon-createopts-createopts>func (daemon *Daemon) create(opts createOpts)</a></li><li><a href=#daemonnewcontainer>daemon.newContainer()</a></li></ol></li><li><a href=#参考链接>参考链接</a></li></ol></nav></details></aside><section class=article-content><blockquote><p>博文分析的 Docker 源码基于 19.03 版本，阅读工具采用 Goland，追踪的是<code>docker run</code>命令在 Docker Daemon 中的执行过程。</p><p>第一次阅读 Docker 源码，如有纰漏还请轻喷，喷完希望能够通过邮件或者留言的方式指出问题。</p><p>限于篇幅以及关注重点的原因，部分个人认为不重要的代码会用省略号代替。</p><p>Tips: 如果图片看不清楚可以点击查看大图。</p></blockquote><h2 id=前言>前言</h2><p>照例还是先摆出 Docker 的架构，<strong>架构在心中，源码轻松读</strong>。</p><p>在上一篇博文中跟踪了<code>docker run</code>命令在 Docker Client 的执行过程，于是就有了本篇博文———分析 <code>docker run</code>在 Docker Daemon 中的执行过程。</p><div class=table-wrapper><table><tr><td><center><img src=https://images.961110.xyz:5001/i/2021/11/16/docker-architecture.png>图1 Docker 架构（官网图）</center></td><td><center><img src=https://images.961110.xyz:5001/i/2021/11/16/Docker.png>图2 Docker 架构图（分组件）</center></td></tr></table></div>上篇博文提到，在 Docker Client 中调用：
+`serverResp, err := cli.post(ctx, "/containers/create", query, body, nil)`
+`resp, err := cli.post(ctx, "/containers/"+containerID+"/start", query, nil, nil)`
+两条语句向 Docker Daemon 发送创建容器和启动容器的请求，所以在本篇博文中将从如何处理`"/containers/create"`这个请求开始分析执行流程。<h2 id=docker-daemon-处理-docker-client-请求的过程>Docker Daemon 处理 Docker Client 请求的过程</h2><p>从 Docker Client 发送的请求可以看出其使用 REST API 与 Docker Daemon 进行交互，那 Docker Daemon 中一定会有相应的路由逻辑，所以从初始化路由开始跟踪。</p><h3 id=initrouteropts-routeroptions>initRouter(opts routerOptions)</h3><p>这个函数的作用就是初始化路由逻辑。</p><p>向上追溯其调用链路：<code>initRouter(routerOptions)</code> &lt;&ndash; <code>daemonCli.start(opts)</code> &lt;&ndash; <code>runDaemon(opts)</code> &lt;&ndash; <code>newDaemonCommand()</code> &lt;&ndash; <code>main()</code>可以清楚得看出 Docker Daemon 创建 DaemonCommand 对象的过程中进行了路由的初始化，这个后面再分析，先追踪初始化路由的过程。</p><img src=https://images.961110.xyz:5001/i/2021/11/18/initRouter.png alt=image-20211118204241671 style=zoom:67%><p>源代码如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=nf>initRouter</span><span class=p>(</span><span class=nx>opts</span><span class=w> </span><span class=nx>routerOptions</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 获取容器解码器</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>decoder</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>runconfig</span><span class=p>.</span><span class=nx>ContainerDecoder</span><span class=p>{}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 创建各个组件的路由表</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>routers</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=p>[]</span><span class=nx>router</span><span class=p>.</span><span class=nx>Router</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// we need to add the checkpoint router before the container router or the DELETE gets masked</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>checkpointrouter</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>,</span><span class=w> </span><span class=nx>decoder</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>container</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>,</span><span class=w> </span><span class=nx>decoder</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>image</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>.</span><span class=nf>ImageService</span><span class=p>()),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>systemrouter</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>cluster</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>buildCache</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>buildkit</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>features</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>volume</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>.</span><span class=nf>VolumesService</span><span class=p>()),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>build</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>buildBackend</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>features</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>sessionrouter</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>sessionManager</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>swarmrouter</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>cluster</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>pluginrouter</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>.</span><span class=nf>PluginManager</span><span class=p>()),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>distributionrouter</span><span class=p>.</span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>daemon</span><span class=p>.</span><span class=nf>ImageService</span><span class=p>()),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 根据设置好的路由表初始化apiServer的路由器</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>opts</span><span class=p>.</span><span class=nx>api</span><span class=p>.</span><span class=nf>InitRouter</span><span class=p>(</span><span class=nx>routers</span><span class=o>...</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>可以看到这个函数中创建了一个路由表，包含 image, volume, container 等路由项，向下追踪 container 的路由项，看看 <code>container.NewRouter(opts.daemon, decoder)</code>是怎样执行的。</p><h3 id=newrouterb-backend-decoder-httputilscontainerdecoder>NewRouter(b Backend, decoder httputils.ContainerDecoder)</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// NewRouter initializes a new container router</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=nf>NewRouter</span><span class=p>(</span><span class=nx>b</span><span class=w> </span><span class=nx>Backend</span><span class=p>,</span><span class=w> </span><span class=nx>decoder</span><span class=w> </span><span class=nx>httputils</span><span class=p>.</span><span class=nx>ContainerDecoder</span><span class=p>)</span><span class=w> </span><span class=nx>router</span><span class=p>.</span><span class=nx>Router</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>r</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=o>&amp;</span><span class=nx>containerRouter</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>backend</span><span class=p>:</span><span class=w> </span><span class=nx>b</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>decoder</span><span class=p>:</span><span class=w> </span><span class=nx>decoder</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>r</span><span class=p>.</span><span class=nf>initRoutes</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=nx>r</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>在这个函数中创建了一个<code>containerRouter</code>的对象，其中<code>backend</code>就是<code>initRouter()</code>在调用时传入的<code>daemon.Daemon</code>对象。</p><p>继续看<code>initRoutes()</code>函数</p><h3 id=func-r-containerrouter-initroutes>func (r *containerRouter) initRoutes()</h3><p>下面是这个函数完整的代码，可以看到 REST API 经典的 get, psot, put, delete 方法，后面跟着资源路径。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// initRoutes initializes the routes in container router</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>r</span><span class=w> </span><span class=o>*</span><span class=nx>containerRouter</span><span class=p>)</span><span class=w> </span><span class=nf>initRoutes</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>r</span><span class=p>.</span><span class=nx>routes</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=p>[]</span><span class=nx>router</span><span class=p>.</span><span class=nx>Route</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// HEAD</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewHeadRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/archive&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>headContainersArchive</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// GET</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewGetRoute</span><span class=p>(</span><span class=s>&#34;/containers/json&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>getContainersJSON</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewGetRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/export&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>getContainersExport</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewGetRoute</span><span class=p>(</span><span class=s>&#34;/exec/{id:.*}/json&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>getExecByID</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewGetRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/archive&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>getContainersArchive</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// POST</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/containers/create&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postContainersCreate</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/kill&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postContainersKill</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/pause&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postContainersPause</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/update&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postContainerUpdate</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/containers/prune&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postContainersPrune</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/commit&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postCommit</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// PUT</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewPutRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/archive&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>putContainersArchive</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=c1>// DELETE</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>router</span><span class=p>.</span><span class=nf>NewDeleteRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>deleteContainers</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>重点关注一下这两行代码</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/containers/create&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postContainersCreate</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nx>router</span><span class=p>.</span><span class=nf>NewPostRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}/start&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>postContainersStart</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>第二个参数就是对应的处理函数，在这两个函数中分别做容器创建和启动的工作。</p><h2 id=docker-daemon-处理创建容器的请求流程>Docker Daemon 处理创建容器的请求流程</h2><h3 id=postcontainerscreate>postContainersCreate</h3><p>api/server/router/container/container_routes.go: 453</p><p>代码不是很复杂，只需要关注重点内容即可，主要是解析 client 传来的数据并根据版本进行相应的配置，然后创建容器，最后给 client 返回结果。</p><img src=https://images.961110.xyz:5001/i/2021/11/18/postContainerCreate.png alt=image-20211118204056283 style=zoom:50%><p>实现代码如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>s</span><span class=w> </span><span class=o>*</span><span class=nx>containerRouter</span><span class=p>)</span><span class=w> </span><span class=nf>postContainersCreate</span><span class=p>(</span><span class=nx>ctx</span><span class=w> </span><span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span><span class=w> </span><span class=nx>w</span><span class=w> </span><span class=nx>http</span><span class=p>.</span><span class=nx>ResponseWriter</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=w> </span><span class=o>*</span><span class=nx>http</span><span class=p>.</span><span class=nx>Request</span><span class=p>,</span><span class=w> </span><span class=nx>vars</span><span class=w> </span><span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 解析表单是否合法</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>httputils</span><span class=p>.</span><span class=nf>ParseForm</span><span class=p>(</span><span class=nx>r</span><span class=p>);</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=nx>err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 检查表达内容是否为JSON格式</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>httputils</span><span class=p>.</span><span class=nf>CheckForJSON</span><span class=p>(</span><span class=nx>r</span><span class=p>);</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=nx>err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 从表单中获取名字（&#34;/container/create&#34;）</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>name</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>Form</span><span class=p>.</span><span class=nf>Get</span><span class=p>(</span><span class=s>&#34;name&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 获取 client 传过来的config, hostConfig, networkingConfig数据</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>config</span><span class=p>,</span><span class=w> </span><span class=nx>hostConfig</span><span class=p>,</span><span class=w> </span><span class=nx>networkingConfig</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>s</span><span class=p>.</span><span class=nx>decoder</span><span class=p>.</span><span class=nf>DecodeConfig</span><span class=p>(</span><span class=nx>r</span><span class=p>.</span><span class=nx>Body</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=nx>err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>version</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>httputils</span><span class=p>.</span><span class=nf>VersionFromContext</span><span class=p>(</span><span class=nx>ctx</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>adjustCPUShares</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>versions</span><span class=p>.</span><span class=nf>LessThan</span><span class=p>(</span><span class=nx>version</span><span class=p>,</span><span class=w> </span><span class=s>&#34;1.19&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 根据API版本号进行针对性配置</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 根据配置创建容器</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>ccr</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>s</span><span class=p>.</span><span class=nx>backend</span><span class=p>.</span><span class=nf>ContainerCreate</span><span class=p>(</span><span class=nx>types</span><span class=p>.</span><span class=nx>ContainerCreateConfig</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>Name</span><span class=p>:</span><span class=w>             </span><span class=nx>name</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>Config</span><span class=p>:</span><span class=w>           </span><span class=nx>config</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>HostConfig</span><span class=p>:</span><span class=w>       </span><span class=nx>hostConfig</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>NetworkingConfig</span><span class=p>:</span><span class=w> </span><span class=nx>networkingConfig</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>AdjustCPUShares</span><span class=p>:</span><span class=w>  </span><span class=nx>adjustCPUShares</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 给 client 返回创建的结果</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=nx>httputils</span><span class=p>.</span><span class=nf>WriteJSON</span><span class=p>(</span><span class=nx>w</span><span class=p>,</span><span class=w> </span><span class=nx>http</span><span class=p>.</span><span class=nx>StatusCreated</span><span class=p>,</span><span class=w> </span><span class=nx>ccr</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>其中出现的各个config主要是为了容器的可移植性，config 中包含了容器的基本信息：name、输入输出流等；host相关不可移植的保存在 HostConfig 中。</p><p>这个函数中需要关注的重点是这一段。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>ccr</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>s</span><span class=p>.</span><span class=nx>backend</span><span class=p>.</span><span class=nf>ContainerCreate</span><span class=p>(</span><span class=nx>types</span><span class=p>.</span><span class=nx>ContainerCreateConfig</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>Name</span><span class=p>:</span><span class=w>             </span><span class=nx>name</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>Config</span><span class=p>:</span><span class=w>           </span><span class=nx>config</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>HostConfig</span><span class=p>:</span><span class=w>       </span><span class=nx>hostConfig</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>NetworkingConfig</span><span class=p>:</span><span class=w> </span><span class=nx>networkingConfig</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>AdjustCPUShares</span><span class=p>:</span><span class=w>  </span><span class=nx>adjustCPUShares</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>})</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>代码中的<code>s.backend</code>其实就是<code>daemon.Daemon</code>对象，参数就是用 client 传来的数据解析出的各个配置信息创建的<code>ContainerCreateConfig</code>对象</p><p>往下追踪调用的是这个函数</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>daemon</span><span class=w> </span><span class=o>*</span><span class=nx>Daemon</span><span class=p>)</span><span class=w> </span><span class=nf>ContainerCreate</span><span class=p>(</span><span class=nx>params</span><span class=w> </span><span class=nx>types</span><span class=p>.</span><span class=nx>ContainerCreateConfig</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>containertypes</span><span class=p>.</span><span class=nx>ContainerCreateCreatedBody</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nf>containerCreate</span><span class=p>(</span><span class=nx>createOpts</span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>params</span><span class=p>:</span><span class=w>                  </span><span class=nx>params</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>managed</span><span class=p>:</span><span class=w>                 </span><span class=kc>false</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>ignoreImagesArgsEscaped</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p><code>managed</code>和<code>ignoreImagesArgsEscaped</code>这两个参数的意思不详。</p><h3 id=containercreateopts-createopts>containerCreate(opts createOpts)</h3><p>daemon/create.go: 55</p><p><img alt=image-20211118204547389 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p>这个函数中主要是检验 config, hostconfig, networkingconfig 的合理性，进而正确地创建镜像。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>daemon</span><span class=w> </span><span class=o>*</span><span class=nx>Daemon</span><span class=p>)</span><span class=w> </span><span class=nf>containerCreate</span><span class=p>(</span><span class=nx>opts</span><span class=w> </span><span class=nx>createOpts</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>containertypes</span><span class=p>.</span><span class=nx>ContainerCreateCreatedBody</span><span class=p>,</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// // 验证HostConfig和Container Config之间的合法性</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>warnings</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nf>verifyContainerSettings</span><span class=p>(</span><span class=nx>os</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>HostConfig</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>Config</span><span class=p>,</span><span class=w> </span><span class=kc>false</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 验证NetworkingConfig的正确性，如client的配置中是否为一个容器创建时配置了超过1个network，查看IPAMConfig是否有效</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>err</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nf>verifyNetworkingConfig</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>NetworkingConfig</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 调整HostConfig不正常的值，如CPUShares、Memory</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>err</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nf>adaptContainerSettings</span><span class=p>(</span><span class=nx>opts</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>HostConfig</span><span class=p>,</span><span class=w> </span><span class=nx>opts</span><span class=p>.</span><span class=nx>params</span><span class=p>.</span><span class=nx>AdjustCPUShares</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>container</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nf>create</span><span class=p>(</span><span class=nx>opts</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=p>.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 返回运行结果</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=nx>containertypes</span><span class=p>.</span><span class=nx>ContainerCreateCreatedBody</span><span class=p>{</span><span class=nx>ID</span><span class=p>:</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>,</span><span class=w> </span><span class=nx>Warnings</span><span class=p>:</span><span class=w> </span><span class=nx>warnings</span><span class=p>},</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>进一步关注<code>container, err := daemon.create(opts)</code>这行代码，其返回了创建成功的容器。</p><h3 id=func-daemon-daemon-createopts-createopts>func (daemon *Daemon) create(opts createOpts)</h3><img src=https://images.961110.xyz:5001/i/2021/11/18/docker-create.png alt="docker  create" style=zoom:33%><p>在这个函数中创建容器进一步调用了<code>daemon.newContainer(opts.params.Name, os, opts.params.Config, opts.params.HostConfig, imgID, opts.managed)</code>创建容器，</p><p>其他的部分主要是为容器的运行做准备：</p><ul><li>找到容器所依赖的镜像ID，并根据镜像配置容器的运行 OS；</li><li>将用户传过来的容器 config 与所依赖镜像 JSON 文件描述的 config 进行合并并验证合法性</li><li>设置安全性选项</li><li>在挂载了 labels 后，创建可读写层</li><li>以 root uid gid的属性创建目录，并修改权限，在<code>/var/lib/docker/containers</code>目录下创建容器文件，并在容器文件下创建 checkpoints 目录</li><li>注册所有挂载到容器的数据卷</li><li>没有设置网络就设置 default 网络</li><li>在 /var/lib/docker/aufs/mnt目录下创建文件以及设置工作目录</li><li>更新网络设置</li><li>将 container 对象 json 化后写入到本地磁盘进行持久化</li><li>向 Docker Daemon 注册新 container</li></ul><h3 id=daemonnewcontainer>daemon.newContainer()</h3><p>daemon/container.go: 130</p><p><img loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p>在这个函数中主要是为容器生成了 ID 和 name，创建了一个 basecontainer 对象，其本身也就是 container 结构体的对象，随后对 basecontainer 对象的一些属性进行初始化，最后返回 basecontainer。</p><p><strong>至此已经完成了对 container 对象的创建和初始化</strong>，目前整个的流程图如下。</p><p><img alt=r.postContainersCreate() loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p>最后在<code>postContainersCreate()</code>中的<code>return httputils.WriteJSON(w, http.StatusCreated, ccr)</code>，将结果返回给 Docker Client。在 Client 中一下步就是调用 ContainerStart()，向 Docker Daemon 发送 <code>resp, err := cli.post(ctx, "/containers/"+containerID+"/start", query, nil, nil)</code>，然后 Docker Daemon 调用 <code>r.postContainersStart()</code>启动容器。</p><h2 id=参考链接>参考链接</h2><ol><li><a class=link href=https://www.cnblogs.com/wen123456/p/14187663.html target=_blank rel=noopener>DOCKER源码分析4 daemon端对container create的处理 - luoyuna - 博客园 (cnblogs.com)</a></li></ol></section><footer class="article-meta article-footer"><section class="article-copyright inline-meta"><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class="article-lastmod inline-meta"><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>2021-12-06 20:10:00</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send,.twikoo .tk-comments-no,.twikoo .el-input__count,.twikoo .tk-submit-action-icon{color:var(--twikoo-body-text-color-main)!important}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://comment.961110.xyz:10010",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2026 JasonChio</section><section class=powerby>间歇性更新 持续性尝试更新<br><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

@@ -1,0 +1,246 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Docker源码分析（十一）—— 命令 docker rm 的执行，相关技术教程和文档"><title>Docker源码分析（十一）—— 命令 docker rm 的执行</title><link rel=canonical href=https://blog.961110.xyz:10010/post/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E5%8D%81%E4%B8%80-%E5%91%BD%E4%BB%A4-docker-rm-%E7%9A%84%E6%89%A7%E8%A1%8C/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="Docker源码分析（十一）—— 命令 docker rm 的执行"><meta property='og:description' content="Docker源码分析（十一）—— 命令 docker rm 的执行，相关技术教程和文档"><meta property='og:url' content='https://blog.961110.xyz:10010/post/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E5%8D%81%E4%B8%80-%E5%91%BD%E4%BB%A4-docker-rm-%E7%9A%84%E6%89%A7%E8%A1%8C/'><meta property='og:site_name' content='积跬步行千里'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2021-12-03T09:30:00+08:00'><meta property='article:modified_time' content='2021-12-03T09:30:00+08:00'><meta name=twitter:title content="Docker源码分析（十一）—— 命令 docker rm 的执行"><meta name=twitter:description content="Docker源码分析（十一）—— 命令 docker rm 的执行，相关技术教程和文档"><script async src="https://www.googletagmanager.com/gtag/js?id=G-YQ9F51F77Q"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YQ9F51F77Q")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src width height class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>积跬步行千里</a></h1><h2 class=site-description>JasonChio</h2></div></header><ol class=menu-social><li><a href=https://space.bilibili.com/30240401 title=Bilibili rel=me><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=mailto:zyb389120217@gmail.com title=Email rel=me><svg class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li><li><a href=https://github.com/jasonchio-cn title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title"></h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ol><li><a href=#docker-client>Docker Client</a></li><li><a href=#docker-daemon>Docker Daemon</a><ol><li><a href=#daemoncontainerrm>Daemon.ContainerRm()</a></li><li><a href=#daemoncleanupcontainer>Daemon.cleanupContainer()</a></li><li><a href=#daemonimageservicereleaselayer>daemon.imageService.ReleaseLayer()</a></li><li><a href=#layerstorereleaserwlayer>layerStore.ReleaseRWLayer()</a></li></ol></li><li><a href=#docker-rm-命令执行过程>docker rm 命令执行过程</a></li><li><a href=#参考资料>参考资料</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/docker%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E5%8D%81%E4%B8%80-%E5%91%BD%E4%BB%A4-docker-rm-%E7%9A%84%E6%89%A7%E8%A1%8C/>Docker源码分析（十一）—— 命令 docker rm 的执行</a></h2><h3 class=article-subtitle>Docker源码分析（十一）—— 命令 docker rm 的执行，相关技术教程和文档</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2021-12-03T09:30:00+08:00>2021-12-03</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span></span></div></summary><nav class=toc-nav><ol><li><a href=#docker-client>Docker Client</a></li><li><a href=#docker-daemon>Docker Daemon</a><ol><li><a href=#daemoncontainerrm>Daemon.ContainerRm()</a></li><li><a href=#daemoncleanupcontainer>Daemon.cleanupContainer()</a></li><li><a href=#daemonimageservicereleaselayer>daemon.imageService.ReleaseLayer()</a></li><li><a href=#layerstorereleaserwlayer>layerStore.ReleaseRWLayer()</a></li></ol></li><li><a href=#docker-rm-命令执行过程>docker rm 命令执行过程</a></li><li><a href=#参考资料>参考资料</a></li></ol></nav></details></aside><section class=article-content><blockquote><p>博文分析的 Docker 源码基于 19.03 版本，阅读工具采用 Goland，追踪的是<code>docker rm</code>命令的执行过程。</p><p>第一次阅读 Docker 源码，如有纰漏还请轻喷，喷完希望能够通过邮件或者留言的方式指出问题。</p><p>限于篇幅以及关注重点的原因，部分个人认为不重要的代码会用省略号代替。</p><p>Tips: 如果图片看不清楚可以点击查看大图。</p></blockquote><h2 id=docker-client>Docker Client</h2><p>分析的命令越多，越会发现在 Docker Client 这一端中各个命令的实现都基本一样。</p><p>调用链路是 <code>main() --> runDocker() --> newDockerCommand() --> AddCommands() --> cmd.AddCommand() --> container.NewContainerCommand() --> cmd.AddCommand() --> NewRmCommand() --> runRm() --> Client.ContainerRemove()</code></p><p><code>runRm()</code>并行地处理多个容器的 remove 操作，<code>Client.ContainerRemove()</code>向 Daemon 发送 delete 请求：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>resp</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>cli</span><span class=p>.</span><span class=nb>delete</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span><span class=w> </span><span class=s>&#34;/containers/&#34;</span><span class=o>+</span><span class=nx>containerID</span><span class=p>,</span><span class=w> </span><span class=nx>query</span><span class=p>,</span><span class=w> </span><span class=kc>nil</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>这一点跟之前分析过的命令不太一样，之前都是 post 请求，<strong>现在成了 delete 请求</strong>。</p><h2 id=docker-daemon>Docker Daemon</h2><p>和 Docker Client 一样，docker rm 对应的路由表项成了</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>router</span><span class=p>.</span><span class=nf>NewDeleteRoute</span><span class=p>(</span><span class=s>&#34;/containers/{name:.*}&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>r</span><span class=p>.</span><span class=nx>deleteContainers</span><span class=p>)</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>调用 Daemon.ContainerRm() 进一步处理。</p><h3 id=daemoncontainerrm>Daemon.ContainerRm()</h3><p>daemon/delete.go: 22</p><img src=https://images.961110.xyz:5001/i/2021/12/03/Daemon.ContainerRmd5e2dae272462ae7.png style=zoom:50%><p>上面一部分都是一些特殊情况判断，核心函数是 <code>daemon.cleanupContainer()</code></p><h3 id=daemoncleanupcontainer>Daemon.cleanupContainer()</h3><p>daemon/delete.go: 79</p><p><code>Daemon.cleanupContainer()</code>主要是进行容器被 rm 的善后操作。代码比较长，可能先看一下图更好理解一点。</p><img src=https://images.961110.xyz:5001/i/2021/12/03/Daemon.cleanupContainerc4ffc1952d4830a7.png style=zoom:50%><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>daemon</span><span class=w> </span><span class=o>*</span><span class=nx>Daemon</span><span class=p>)</span><span class=w> </span><span class=nf>cleanupContainer</span><span class=p>(</span><span class=nx>container</span><span class=w> </span><span class=o>*</span><span class=nx>container</span><span class=p>.</span><span class=nx>Container</span><span class=p>,</span><span class=w> </span><span class=nx>forceRemove</span><span class=p>,</span><span class=w> </span><span class=nx>removeVolume</span><span class=w> </span><span class=kt>bool</span><span class=p>)</span><span class=w> </span><span class=p>(</span><span class=nx>err</span><span class=w> </span><span class=kt>error</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 首先判断容器是否正在 running</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nf>IsRunning</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        	</span><span class=c1>// 正在 running，如果不能强行 remove 的话就需要抛出错误</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=p>!</span><span class=nx>forceRemove</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>state</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nf>StateString</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>procedure</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=s>&#34;Stop the container before attempting removal or force remove&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>if</span><span class=w> </span><span class=nx>state</span><span class=w> </span><span class=o>==</span><span class=w> </span><span class=s>&#34;paused&#34;</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>				</span><span class=nx>procedure</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=s>&#34;Unpause and then &#34;</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=nx>strings</span><span class=p>.</span><span class=nf>ToLower</span><span class=p>(</span><span class=nx>procedure</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Errorf</span><span class=p>(</span><span class=s>&#34;You cannot remove a %s container %s. %s&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>state</span><span class=p>,</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>,</span><span class=w> </span><span class=nx>procedure</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w> </span><span class=nx>errdefs</span><span class=p>.</span><span class=nf>Conflict</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        	</span><span class=c1>// 可以强制 remove，就先 kill 容器</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nf>Kill</span><span class=p>(</span><span class=nx>container</span><span class=p>);</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w> </span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Errorf</span><span class=p>(</span><span class=s>&#34;Could not kill running container %s, cannot remove - %v&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 判断容器的操作系统是否被 host 所支持</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=p>!</span><span class=nx>system</span><span class=p>.</span><span class=nf>IsOSSupported</span><span class=p>(</span><span class=nx>container</span><span class=p>.</span><span class=nx>OS</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Errorf</span><span class=p>(</span><span class=s>&#34;cannot remove %s: %s &#34;</span><span class=p>,</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>,</span><span class=w> </span><span class=nx>system</span><span class=p>.</span><span class=nx>ErrNotSupportedOperatingSystem</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// stop collection of stats for the container regardless</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// if stats are currently getting collected.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 关闭所有订阅了容器状态的订阅者的 channels，删除对应配置</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>daemon</span><span class=p>.</span><span class=nx>statsCollector</span><span class=p>.</span><span class=nf>StopCollection</span><span class=p>(</span><span class=nx>container</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 不是 running 状态，也有可能是 pause 等状态，也需要先 stop</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nf>containerStop</span><span class=p>(</span><span class=nx>container</span><span class=p>,</span><span class=w> </span><span class=mi>3</span><span class=p>);</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=nx>err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=o>...</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 把容器状态保存到磁盘中，这样容器元数据文件删除前发生错误的话重启 docker 也不会让该容器重新启动起来。</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nf>CheckpointTo</span><span class=p>(</span><span class=nx>daemon</span><span class=p>.</span><span class=nx>containersReplica</span><span class=p>);</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=p>!</span><span class=nx>os</span><span class=p>.</span><span class=nf>IsNotExist</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>logrus</span><span class=p>.</span><span class=nf>Errorf</span><span class=p>(</span><span class=s>&#34;Error saving dying container to disk: %v&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>container</span><span class=p>.</span><span class=nf>Unlock</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// When container creation fails and `RWLayer` has not been created yet, we</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// do not call `ReleaseRWLayer`</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>RWLayer</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        	</span><span class=c1>// 如果容器有读写层，就需要释放</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nx>imageService</span><span class=p>.</span><span class=nf>ReleaseLayer</span><span class=p>(</span><span class=nx>container</span><span class=p>.</span><span class=nx>RWLayer</span><span class=p>,</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>OS</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>err</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=nx>errors</span><span class=p>.</span><span class=nf>Wrapf</span><span class=p>(</span><span class=nx>err</span><span class=p>,</span><span class=w> </span><span class=s>&#34;container %s&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=nx>container</span><span class=p>.</span><span class=nf>SetRemovalError</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>			</span><span class=k>return</span><span class=w> </span><span class=nx>err</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>container</span><span class=p>.</span><span class=nx>RWLayer</span><span class=w> </span><span class=p>=</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 确保容器的 home 目录下所有内容已移除</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>system</span><span class=p>.</span><span class=nf>EnsureRemoveAll</span><span class=p>(</span><span class=nx>container</span><span class=p>.</span><span class=nx>Root</span><span class=p>);</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>e</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>errors</span><span class=p>.</span><span class=nf>Wrapf</span><span class=p>(</span><span class=nx>err</span><span class=p>,</span><span class=w> </span><span class=s>&#34;unable to remove filesystem for %s&#34;</span><span class=p>,</span><span class=w> </span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>container</span><span class=p>.</span><span class=nf>SetRemovalError</span><span class=p>(</span><span class=nx>e</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=k>return</span><span class=w> </span><span class=nx>e</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 删除所有和指定容器相关的容器间的链接</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>linkNames</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nx>linkIndex</span><span class=p>.</span><span class=nb>delete</span><span class=p>(</span><span class=nx>container</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 一些清理操作</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nf>selinuxFreeLxcContexts</span><span class=p>(</span><span class=nx>container</span><span class=p>.</span><span class=nx>ProcessLabel</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>daemon</span><span class=p>.</span><span class=nx>idIndex</span><span class=p>.</span><span class=nf>Delete</span><span class=p>(</span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>daemon</span><span class=p>.</span><span class=nx>containers</span><span class=p>.</span><span class=nf>Delete</span><span class=p>(</span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>daemon</span><span class=p>.</span><span class=nx>containersReplica</span><span class=p>.</span><span class=nf>Delete</span><span class=p>(</span><span class=nx>container</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 移除容器的所有挂载点</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>if</span><span class=w> </span><span class=nx>e</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>daemon</span><span class=p>.</span><span class=nf>removeMountPoints</span><span class=p>(</span><span class=nx>container</span><span class=p>,</span><span class=w> </span><span class=nx>removeVolume</span><span class=p>);</span><span class=w> </span><span class=nx>e</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>logrus</span><span class=p>.</span><span class=nf>Error</span><span class=p>(</span><span class=nx>e</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// 释放容器相关的所有别名</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>for</span><span class=w> </span><span class=nx>_</span><span class=p>,</span><span class=w> </span><span class=nx>name</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=k>range</span><span class=w> </span><span class=nx>linkNames</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>		</span><span class=nx>daemon</span><span class=p>.</span><span class=nf>releaseName</span><span class=p>(</span><span class=nx>name</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>container</span><span class=p>.</span><span class=nf>SetRemoved</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>stateCtr</span><span class=p>.</span><span class=nf>del</span><span class=p>(</span><span class=nx>container</span><span class=p>.</span><span class=nx>ID</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>daemon</span><span class=p>.</span><span class=nf>LogContainerEvent</span><span class=p>(</span><span class=nx>container</span><span class=p>,</span><span class=w> </span><span class=s>&#34;destroy&#34;</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p><code>daemon.statsCollector.StopCollection(container)</code>这一句中的 <code>statsCollector</code> 的结构体如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span><span class=w> </span><span class=nx>Collector</span><span class=w> </span><span class=kd>struct</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>m</span><span class=w>          </span><span class=nx>sync</span><span class=p>.</span><span class=nx>Mutex</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>cond</span><span class=w>       </span><span class=o>*</span><span class=nx>sync</span><span class=p>.</span><span class=nx>Cond</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>supervisor</span><span class=w> </span><span class=nx>supervisor</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>interval</span><span class=w>   </span><span class=nx>time</span><span class=p>.</span><span class=nx>Duration</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>publishers</span><span class=w> </span><span class=kd>map</span><span class=p>[</span><span class=o>*</span><span class=nx>container</span><span class=p>.</span><span class=nx>Container</span><span class=p>]</span><span class=o>*</span><span class=nx>pubsub</span><span class=p>.</span><span class=nx>Publisher</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>bufReader</span><span class=w>  </span><span class=o>*</span><span class=nx>bufio</span><span class=p>.</span><span class=nx>Reader</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=c1>// The following fields are not set on Windows currently.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>	</span><span class=nx>clockTicksPerSecond</span><span class=w> </span><span class=kt>uint64</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>应该是负责管理和提供容器状态的类，<code>publishers</code>负责向容器状态订阅者推送状态信息。</p><h3 id=daemonimageservicereleaselayer>daemon.imageService.ReleaseLayer()</h3><p>daemon/images/service.go: 182</p><p>这个函数会在 rm 容器或者 export 容器的时候调用，主要是调用 <code>layerStore.ReleaseRWLayer()</code> 进一步释放读写层。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span><span class=w> </span><span class=p>(</span><span class=nx>i</span><span class=w> </span><span class=o>*</span><span class=nx>ImageService</span><span class=p>)</span><span class=w> </span><span class=nf>ReleaseLayer</span><span class=p>(</span><span class=nx>rwlayer</span><span class=w> </span><span class=nx>layer</span><span class=p>.</span><span class=nx>RWLayer</span><span class=p>,</span><span class=w> </span><span class=nx>containerOS</span><span class=w> </span><span class=kt>string</span><span class=p>)</span><span class=w> </span><span class=kt>error</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>   </span><span class=nx>metadata</span><span class=p>,</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>:=</span><span class=w> </span><span class=nx>i</span><span class=p>.</span><span class=nx>layerStores</span><span class=p>[</span><span class=nx>containerOS</span><span class=p>].</span><span class=nf>ReleaseRWLayer</span><span class=p>(</span><span class=nx>rwlayer</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>   </span><span class=nx>layer</span><span class=p>.</span><span class=nf>LogReleaseMetadata</span><span class=p>(</span><span class=nx>metadata</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>   </span><span class=k>if</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=kc>nil</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=nx>err</span><span class=w> </span><span class=o>!=</span><span class=w> </span><span class=nx>layer</span><span class=p>.</span><span class=nx>ErrMountDoesNotExist</span><span class=w> </span><span class=o>&amp;&amp;</span><span class=w> </span><span class=p>!</span><span class=nx>os</span><span class=p>.</span><span class=nf>IsNotExist</span><span class=p>(</span><span class=nx>errors</span><span class=p>.</span><span class=nf>Cause</span><span class=p>(</span><span class=nx>err</span><span class=p>))</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=k>return</span><span class=w> </span><span class=nx>errors</span><span class=p>.</span><span class=nf>Wrapf</span><span class=p>(</span><span class=nx>err</span><span class=p>,</span><span class=w> </span><span class=s>&#34;driver %q failed to remove root filesystem&#34;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>         </span><span class=nx>i</span><span class=p>.</span><span class=nx>layerStores</span><span class=p>[</span><span class=nx>containerOS</span><span class=p>].</span><span class=nf>DriverName</span><span class=p>())</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>   </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>   </span><span class=k>return</span><span class=w> </span><span class=kc>nil</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=layerstorereleaserwlayer>layerStore.ReleaseRWLayer()</h3><p>layer/layer_store.go: 587</p><p>这个函数直接看图吧，在看的时候发现还需要多补充下镜像相关的知识。</p><img src=https://images.961110.xyz:5001/i/2021/12/04/layerStore.ReleaseRWLayer.png style=zoom:50%><h2 id=docker-rm-命令执行过程>docker rm 命令执行过程</h2><p><img loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><h2 id=参考资料>参考资料</h2><p>无</p></section><footer class="article-meta article-footer"><section class="article-copyright inline-meta"><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send,.twikoo .tk-comments-no,.twikoo .el-input__count,.twikoo .tk-submit-action-icon{color:var(--twikoo-body-text-color-main)!important}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://comment.961110.xyz:10010",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2026 JasonChio</section><section class=powerby>间歇性更新 持续性尝试更新<br><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

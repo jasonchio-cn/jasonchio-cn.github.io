@@ -1,0 +1,127 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="【转载】Linux 下 golang 多版本管理器，相关技术教程和文档"><title>【转载】Linux 下 golang 多版本管理器</title><link rel=canonical href=https://blog.961110.xyz:10010/post/%E8%BD%AC%E8%BD%BDlinux-%E4%B8%8B-golang-%E5%A4%9A%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="【转载】Linux 下 golang 多版本管理器"><meta property='og:description' content="【转载】Linux 下 golang 多版本管理器，相关技术教程和文档"><meta property='og:url' content='https://blog.961110.xyz:10010/post/%E8%BD%AC%E8%BD%BDlinux-%E4%B8%8B-golang-%E5%A4%9A%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8/'><meta property='og:site_name' content='积跬步行千里'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2021-12-15T16:44:00+08:00'><meta property='article:modified_time' content='2022-01-19T11:20:00+08:00'><meta name=twitter:title content="【转载】Linux 下 golang 多版本管理器"><meta name=twitter:description content="【转载】Linux 下 golang 多版本管理器，相关技术教程和文档"><script async src="https://www.googletagmanager.com/gtag/js?id=G-YQ9F51F77Q"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YQ9F51F77Q")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src width height class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>积跬步行千里</a></h1><h2 class=site-description>JasonChio</h2></div></header><ol class=menu-social><li><a href=https://space.bilibili.com/30240401 title=Bilibili rel=me><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=mailto:zyb389120217@gmail.com title=Email rel=me><svg class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li><li><a href=https://github.com/jasonchio-cn title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title"></h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ol><li><a href=#特性>特性</a></li><li><a href=#安装>安装</a><ol><li><a href=#自动化安装>自动化安装</a></li><li><a href=#手动安装>手动安装</a></li></ol></li><li><a href=#使用>使用</a><ol><li><a href=#将-gopathbin-添加到路径中>将 GOPATH/bin 添加到路径中</a></li></ol></li><li><a href=#faq>FAQ</a></li><li><a href=#鸣谢>鸣谢</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/%E8%BD%AC%E8%BD%BDlinux-%E4%B8%8B-golang-%E5%A4%9A%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8/>【转载】Linux 下 golang 多版本管理器</a></h2><h3 class=article-subtitle>【转载】Linux 下 golang 多版本管理器，相关技术教程和文档</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2021-12-15T16:44:00+08:00>2021-12-15</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span></span></div></summary><nav class=toc-nav><ol><li><a href=#特性>特性</a></li><li><a href=#安装>安装</a><ol><li><a href=#自动化安装>自动化安装</a></li><li><a href=#手动安装>手动安装</a></li></ol></li><li><a href=#使用>使用</a><ol><li><a href=#将-gopathbin-添加到路径中>将 GOPATH/bin 添加到路径中</a></li></ol></li><li><a href=#faq>FAQ</a></li><li><a href=#鸣谢>鸣谢</a></li></ol></nav></details></aside><section class=article-content><blockquote><p>原文地址 <a class=link href=https://segmentfault.com/a/1190000019218168 target=_blank rel=noopener>golang 多版本管理器</a></p></blockquote><p><a class=link href="https://link.segmentfault.com/?enc=HGrnxFltecJpZeDIol6ehg%3D%3D.m1HIrix1OGH%2FYSkWTzlvyYCMHUI6dAj%2FDd5UY7UZjp8%3D" target=_blank rel=noopener>g</a> 是一个 Linux、macOS、Windows 下的命令行工具，可以提供一个便捷的多版本 <a class=link href="https://link.segmentfault.com/?enc=IiyYZQxxLv1Bxhk2ucPTQg%3D%3D.DXW2ePczTCYlJBFgRMHx27dSg%2BtkmQn1stAu5SUZoVw%3D" target=_blank rel=noopener>go</a> 环境的管理和切换。</p><h2 id=特性>特性</h2><ul><li>支持列出可供安装的 go 版本号</li><li>支持列出已安装的 go 版本号</li><li>支持在本地安装多个 go 版本</li><li>支持卸载已安装的 go 版本</li><li>支持在已安装的 go 版本之间自由切换</li></ul><h2 id=安装>安装</h2><h3 id=自动化安装>自动化安装</h3><ul><li><p>Linux/macOS（适用于 bash、zsh）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 建议安装前清空`GOROOT`、`GOBIN`等环境变量</span>
+</span></span><span class=line><span class=cl>$ wget -qO- https://raw.githubusercontent.com/voidint/g/master/install.sh <span class=p>|</span> bash
+</span></span><span class=line><span class=cl>$ <span class=nb>echo</span> <span class=s2>&#34;unalias g&#34;</span> &gt;&gt; ~/.bashrc <span class=c1># 可选。若其他程序（如&#39;git&#39;）使用了&#39;g&#39;作为别名。</span>
+</span></span><span class=line><span class=cl>$ <span class=nb>source</span> ~/.bashrc <span class=c1># 或者 source ~/.zshrc</span>
+</span></span></code></pre></td></tr></table></div></div></li></ul><h3 id=手动安装>手动安装</h3><ul><li><p>下载对应平台的<a class=link href="https://link.segmentfault.com/?enc=1prd848WenP4l5j4FgFq5w%3D%3D.mBCUO%2F9ZDtMAf0MIaGfmljqdRHlA0KMyZoRySI96DBuwp4N7%2FesQ11%2FPWJWlkGfD" target=_blank rel=noopener>二进制压缩包</a>。</p></li><li><p>将压缩包解压至<code>PATH</code>环境变量目录下，如<code>/usr/local/bin</code>。</p></li><li><p>编辑 shell 环境配置文件（<code>~/.bashrc</code>、<code>~/.zshrc</code>&mldr;）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ cat&gt;&gt;~/.bashrc<span class=s>&lt;&lt;EOF
+</span></span></span><span class=line><span class=cl><span class=s>export GOROOT=&#34;${HOME}/.g/go&#34;
+</span></span></span><span class=line><span class=cl><span class=s>export PATH=&#34;${HOME}/.g/go/bin:$PATH&#34;
+</span></span></span><span class=line><span class=cl><span class=s>export G_MIRROR=https://golang.google.cn/dl/
+</span></span></span><span class=line><span class=cl><span class=s>EOF</span>
+</span></span></code></pre></td></tr></table></div></div></li></ul><h2 id=使用>使用</h2><p>查询当前可供安装的<code>stable</code>状态的 go 版本</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ g ls-remote stable
+</span></span><span class=line><span class=cl>1.11.9
+</span></span><span class=line><span class=cl>1.12.4
+</span></span></code></pre></td></tr></table></div></div><p>安装目标 go 版本<code>1.12.4</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ g install 1.12.4
+</span></span><span class=line><span class=cl>Installed successfully
+</span></span><span class=line><span class=cl>$ go version
+</span></span><span class=line><span class=cl>go version go1.12.4 darwin/amd64
+</span></span></code></pre></td></tr></table></div></div><p>查询已安装的 go 版本</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ g ls
+</span></span><span class=line><span class=cl>1.12.4
+</span></span></code></pre></td></tr></table></div></div><p>查询可供安装的所有 go 版本</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ g ls-remote
+</span></span><span class=line><span class=cl>1.2.2
+</span></span><span class=line><span class=cl>1.3
+</span></span><span class=line><span class=cl>1.3.1
+</span></span><span class=line><span class=cl>...    // 省略若干版本
+</span></span><span class=line><span class=cl>1.11.7
+</span></span><span class=line><span class=cl>1.11.8
+</span></span><span class=line><span class=cl>1.11.9
+</span></span><span class=line><span class=cl>1.12
+</span></span><span class=line><span class=cl>1.12.1
+</span></span><span class=line><span class=cl>1.12.2
+</span></span><span class=line><span class=cl>1.12.3
+</span></span><span class=line><span class=cl>1.12.4
+</span></span></code></pre></td></tr></table></div></div><p>安装目标 go 版本<code>1.11.9</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ g install 1.11.9
+</span></span><span class=line><span class=cl>Installed successfully
+</span></span><span class=line><span class=cl>$ go version
+</span></span><span class=line><span class=cl>go version go1.11.9 darwin/amd64
+</span></span></code></pre></td></tr></table></div></div><p>切换到另一个已安装的 go 版本</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ g ls
+</span></span><span class=line><span class=cl>1.11.9
+</span></span><span class=line><span class=cl>1.12.4
+</span></span><span class=line><span class=cl>$ g use 1.12.4
+</span></span><span class=line><span class=cl>go version go1.12.4 darwin/amd64
+</span></span></code></pre></td></tr></table></div></div><p>卸载一个已安装的 go 版本</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>g uninstall 1.11.9
+</span></span><span class=line><span class=cl>Uninstall successfully
+</span></span></code></pre></td></tr></table></div></div><h3 id=将-gopathbin-添加到路径中>将 GOPATH/bin 添加到路径中</h3><p>在 ~/.bashrc 或 ~/.zshrc 中增加下面几行</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># GO</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>GOPATH</span><span class=o>=</span><span class=nv>$HOME</span>/go
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>PATH</span><span class=o>=</span><span class=nv>$PATH</span>:<span class=nv>$GOROOT</span>/bin:<span class=nv>$GOPATH</span>/bin
+</span></span></code></pre></td></tr></table></div></div><p>GOPATH 和 GOROOT 都使用 go env 这个命令列出，修改对应路径即可。</p><h2 id=faq>FAQ</h2><ul><li><p>环境变量<code>G_MIRROR</code>有什么作用？</p><p>由于中国大陆无法自由访问 Golang 官网，导致查询及下载 go 版本都变得困难，因此可以通过该环境变量指定一个镜像站点（如<code>https://golang.google.cn/dl/</code>），g 将从该站点查询、下载可用的 go 版本。</p></li><li><p>支持源代码编译安装吗？</p><p>不支持</p></li></ul><h2 id=鸣谢>鸣谢</h2><p>感谢 <a class=link href="https://link.segmentfault.com/?enc=N4GmxCVmZsTbV6ul2dbu6A%3D%3D.ibICcM7AsQynCM9wvSSnd0hyzBSz7cUkXf2H0GnB2Uo%3D" target=_blank rel=noopener>nvm</a>、<a class=link href="https://link.segmentfault.com/?enc=ozQgme1W%2FtphsjjlX6NUsQ%3D%3D.rsDgyfwAd7LfvIObBX2T4Ip7seZDRvdZhVXlgJBXRQU%3D" target=_blank rel=noopener>n</a>、<a class=link href="https://link.segmentfault.com/?enc=FZndRW4e132UcOeEC1dI4g%3D%3D.Qf1sRTAYRHRpU1qlvz8KrZMKdR32Uc%2BMb%2FEXu%2F0sg1M%3D" target=_blank rel=noopener>rvm</a> 等工具提供的宝贵思路。</p></section><footer class="article-meta article-footer"><section class="article-copyright inline-meta"><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class="article-lastmod inline-meta"><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>2022-01-19 11:20:00</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send,.twikoo .tk-comments-no,.twikoo .el-input__count,.twikoo .tk-submit-action-icon{color:var(--twikoo-body-text-color-main)!important}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://comment.961110.xyz:10010",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2026 JasonChio</section><section class=powerby>间歇性更新 持续性尝试更新<br><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

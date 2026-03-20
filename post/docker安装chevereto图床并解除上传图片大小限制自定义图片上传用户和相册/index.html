@@ -1,0 +1,186 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册，相关技术教程和文档"><title>Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册</title><link rel=canonical href=https://blog.961110.xyz:10010/post/docker%E5%AE%89%E8%A3%85chevereto%E5%9B%BE%E5%BA%8A%E5%B9%B6%E8%A7%A3%E9%99%A4%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F%E9%99%90%E5%88%B6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0%E7%94%A8%E6%88%B7%E5%92%8C%E7%9B%B8%E5%86%8C/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册"><meta property='og:description' content="Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册，相关技术教程和文档"><meta property='og:url' content='https://blog.961110.xyz:10010/post/docker%E5%AE%89%E8%A3%85chevereto%E5%9B%BE%E5%BA%8A%E5%B9%B6%E8%A7%A3%E9%99%A4%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F%E9%99%90%E5%88%B6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0%E7%94%A8%E6%88%B7%E5%92%8C%E7%9B%B8%E5%86%8C/'><meta property='og:site_name' content='积跬步行千里'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2021-10-05T11:00:00+08:00'><meta property='article:modified_time' content='2021-10-05T11:00:00+08:00'><meta name=twitter:title content="Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册"><meta name=twitter:description content="Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册，相关技术教程和文档"><script async src="https://www.googletagmanager.com/gtag/js?id=G-YQ9F51F77Q"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YQ9F51F77Q")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src width height class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>积跬步行千里</a></h1><h2 class=site-description>JasonChio</h2></div></header><ol class=menu-social><li><a href=https://space.bilibili.com/30240401 title=Bilibili rel=me><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=mailto:zyb389120217@gmail.com title=Email rel=me><svg class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li><li><a href=https://github.com/jasonchio-cn title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title"></h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ol><li><a href=#安装>安装</a></li><li><a href=#解除上传图片的大小限制>解除上传图片的大小限制</a><ol><li><a href=#复制到服务器本地路径下>复制到服务器本地路径下</a></li><li><a href=#修改配置文件>修改配置文件</a></li><li><a href=#复制到容器目录里面>复制到容器目录里面</a></li></ol></li><li><a href=#修改上传api>修改上传API</a></li><li><a href=#配置typora和picgo>配置Typora和PicGo</a></li><li><a href=#参考链接>参考链接</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/docker%E5%AE%89%E8%A3%85chevereto%E5%9B%BE%E5%BA%8A%E5%B9%B6%E8%A7%A3%E9%99%A4%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F%E9%99%90%E5%88%B6%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0%E7%94%A8%E6%88%B7%E5%92%8C%E7%9B%B8%E5%86%8C/>Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册</a></h2><h3 class=article-subtitle>Docker安装chevereto图床并解除上传图片大小限制、自定义图片上传用户和相册，相关技术教程和文档</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2021-10-05T11:00:00+08:00>2021-10-05</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span></span></div></summary><nav class=toc-nav><ol><li><a href=#安装>安装</a></li><li><a href=#解除上传图片的大小限制>解除上传图片的大小限制</a><ol><li><a href=#复制到服务器本地路径下>复制到服务器本地路径下</a></li><li><a href=#修改配置文件>修改配置文件</a></li><li><a href=#复制到容器目录里面>复制到容器目录里面</a></li></ol></li><li><a href=#修改上传api>修改上传API</a></li><li><a href=#配置typora和picgo>配置Typora和PicGo</a></li><li><a href=#参考链接>参考链接</a></li></ol></nav></details></aside><section class=article-content><h2 id=安装>安装</h2><p>直接用官方的推荐安装方式，修改后的docker-compose.yaml如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;3&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>services</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>db</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>mariadb</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>database:/var/lib/mysql:rw</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>private</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>MYSQL_ROOT_PASSWORD</span><span class=p>:</span><span class=w> </span><span class=l>xxx</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>MYSQL_DATABASE</span><span class=p>:</span><span class=w> </span><span class=l>chevereto</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>MYSQL_USER</span><span class=p>:</span><span class=w> </span><span class=l>jason</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>MYSQL_PASSWORD</span><span class=p>:</span><span class=w> </span><span class=l>xxx</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>chevereto</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>depends_on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>db</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>nmtan/chevereto</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>restart</span><span class=p>:</span><span class=w> </span><span class=l>always</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>private</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>CHEVERETO_DB_HOST</span><span class=p>:</span><span class=w> </span><span class=l>db</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>CHEVERETO_DB_USERNAME</span><span class=p>:</span><span class=w> </span><span class=l>jason</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>CHEVERETO_DB_PASSWORD</span><span class=p>:</span><span class=w> </span><span class=l>xxx</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>CHEVERETO_DB_NAME</span><span class=p>:</span><span class=w> </span><span class=l>chevereto</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span><span class=nt>CHEVERETO_DB_PREFIX</span><span class=p>:</span><span class=w> </span><span class=l>chv_</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>/home/Jason/chv_images:/var/www/html/images:rw </span><span class=w> </span><span class=c>#将照片存放路径映射到了本地存储中</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>ports</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=m>8080</span><span class=p>:</span><span class=m>80</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>networks</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>private</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>volumes</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>database</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>chevereto_images</span><span class=p>:</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>然后<code>docker-compose up -d</code>就可以启动，通过8080端口访问chevereto。</p><h2 id=解除上传图片的大小限制>解除上传图片的大小限制</h2><h3 id=复制到服务器本地路径下>复制到服务器本地路径下</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=nx>docker</span> <span class=nx>cp</span>  <span class=nx>containerID</span><span class=o>:</span><span class=err>/var/www/html/.htaccess /volume1/docker/</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=修改配置文件>修改配置文件</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=n>vi</span> <span class=o>/</span><span class=n>volume1</span><span class=o>/</span><span class=n>docker</span><span class=o>/.</span><span class=n>htaccess</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Disable server signature</span>
+</span></span><span class=line><span class=cl><span class=n>ServerSignature</span> <span class=n>Off</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Disable directory listing (-indexes), Multiviews (-MultiViews) and enable Follow system links (+FollowSymLinks)</span>
+</span></span><span class=line><span class=cl><span class=n>Options</span> <span class=o>-</span><span class=n>Indexes</span>
+</span></span><span class=line><span class=cl><span class=n>Options</span> <span class=o>-</span><span class=n>MultiViews</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>&lt;</span><span class=n>IfModule</span> <span class=n>mod_rewrite</span><span class=o>.</span><span class=n>c</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>RewriteEngine</span> <span class=n>On</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=o>...</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>RewriteRule</span> <span class=o>.</span> <span class=n>index</span><span class=o>.</span><span class=n>php</span> <span class=p>[</span><span class=n>L</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=c1>#修改上传文件大小增加以下 配置  最大支持 32M 根据自己情况配置</span>
+</span></span><span class=line><span class=cl>    <span class=n>php_value</span> <span class=n>post_max_size</span> <span class=mi>64</span><span class=n>M</span>
+</span></span><span class=line><span class=cl>    <span class=n>php_value</span> <span class=n>upload_max_filesize</span> <span class=mi>32</span><span class=n>M</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>&lt;/</span><span class=n>IfModule</span><span class=o>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=复制到容器目录里面>复制到容器目录里面</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=nx>docker</span> <span class=nx>cp</span> <span class=o>/</span><span class=nx>volume1</span><span class=o>/</span><span class=nx>docker</span><span class=o>/</span><span class=p>.</span><span class=nx>htaccess</span> <span class=nx>containerID</span><span class=o>:</span><span class=err>/var/www/html/</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=修改上传api>修改上传API</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>docker cp containerID:/var/www/html/app/routes/route.api.php ./
+</span></span></code></pre></td></tr></table></div></div><p>将PHP文件复制出来，相应位置增加如下代码</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=nv>$version</span> <span class=o>=</span> <span class=nv>$handler</span><span class=o>-&gt;</span><span class=na>request</span><span class=p>[</span><span class=mi>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=nv>$action</span> <span class=o>=</span> <span class=nv>$handler</span><span class=o>-&gt;</span><span class=na>request</span><span class=p>[</span><span class=mi>1</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 新增下面两行
+</span></span></span><span class=line><span class=cl><span class=nv>$user</span> <span class=o>=</span> <span class=nv>$_REQUEST</span><span class=p>[</span><span class=s1>&#39;user&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=nv>$album</span> <span class=o>=</span> <span class=nv>$_REQUEST</span><span class=p>[</span><span class=s1>&#39;album&#39;</span><span class=p>];</span>
+</span></span></code></pre></td></tr></table></div></div><p>更改如下代码</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=c1>// 将这行代码增加 user 和 album 两个参数
+</span></span></span><span class=line><span class=cl><span class=nv>$uploaded_id</span> <span class=o>=</span> <span class=nx>CHV\Image</span><span class=o>::</span><span class=na>uploadToWebsite</span><span class=p>(</span><span class=nv>$source</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 更改后的代码如下
+</span></span></span><span class=line><span class=cl><span class=nv>$uploaded_id</span> <span class=o>=</span> <span class=nx>CHV\Image</span><span class=o>::</span><span class=na>uploadToWebsite</span><span class=p>(</span><span class=nv>$source</span><span class=p>,</span> <span class=nv>$user</span><span class=p>,</span> <span class=k>array</span><span class=p>(</span><span class=s1>&#39;album_id&#39;</span><span class=o>=&gt;</span><span class=nv>$album</span><span class=p>));</span>
+</span></span></code></pre></td></tr></table></div></div><p>将修改后的文件复制到容器中替换</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>docker cp ./route.api.php  containerID:/var/www/html/app/routes/route.api.php
+</span></span></code></pre></td></tr></table></div></div><h2 id=配置typora和picgo>配置Typora和PicGo</h2><p>在PicGo中下载插件web-uploader，填入如下配置</p><img src=https://images.961110.xyz:5001/i/2021/10/20/image-20211020120134965.png alt=image-20211020120134965 style=zoom:50%><ul><li>API地址：http或https(根据自身情况)://域名/api/1/upload</li><li>POST参数名：source</li><li>JSON路径：image.url</li><li>自定义Body：<code>{"key":"your key", "user":"username", "album":"albumid"}</code></li></ul><p>key在用户名&ndash;>仪表盘&ndash;>设置&ndash;>API可以找到</p><img src=https://images.961110.xyz:5001/i/2021/10/20/image-20211020120705106.png alt=image-20211020120705106 style=zoom:50%><p>username就在chevereto网站右上角<img alt=image-20211020120603290 loading=lazy sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px"></p><p>albumid在用户的相册详细信息中可以找到。</p><img src=https://images.961110.xyz:5001/i/2021/10/20/image-20211020120843573.png alt=image-20211020120843573 style=zoom:50%><p>配置完成后设置为默认图床，进行上传测试。</p><h2 id=参考链接>参考链接</h2><ol><li><a class=link href="https://blog.csdn.net/qq_25005601/article/details/110532477?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&amp;spm=1001.2101.3001.4242" target=_blank rel=noopener>Typora + PicGo 自动上传图片到 Chevereto 图床_张大炮来巡山-CSDN博客</a></li><li><a class=link href=https://blog.csdn.net/qq_19564393/article/details/108506062 target=_blank rel=noopener>修改Chevereto的API上传相册和用户_飞逝17的博客-CSDN博客</a></li><li><a class=link href=https://blog.csdn.net/weixin_29343153/article/details/113534943 target=_blank rel=noopener>docker修改文件夹权限_群晖通过Docker安装图床工具Chevereto的步骤_藏美者阿远的博客-CSDN博客</a></li><li><a class=link href=https://www.orcy.net.cn/775.html target=_blank rel=noopener>Docker容器报错处理:AH00558: apache2: Could not reliably determine the server’s fully qualified domain name, using 172.17.0.5. Set the ‘ServerName’ directive globally to suppress this message – 下一朵云 (orcy.net.cn)</a></li><li><a class=link href=https://cloud.tencent.com/developer/article/1645239 target=_blank rel=noopener>群晖Docker安装chevereto图床</a></li></ol></section><footer class="article-meta article-footer"><section class="article-copyright inline-meta"><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send,.twikoo .tk-comments-no,.twikoo .el-input__count,.twikoo .tk-submit-action-icon{color:var(--twikoo-body-text-color-main)!important}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://comment.961110.xyz:10010",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2026 JasonChio</section><section class=powerby>间歇性更新 持续性尝试更新<br><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

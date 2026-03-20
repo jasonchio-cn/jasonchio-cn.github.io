@@ -1,0 +1,182 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="使用 dlv Debug dockerd(Docker Daemon) 的方法，相关技术教程和文档"><title>使用 dlv Debug dockerd(Docker Daemon) 的方法</title><link rel=canonical href=https://blog.961110.xyz:10010/post/%E4%BD%BF%E7%94%A8-dlv-debug-dockerddocker-daemon-%E7%9A%84%E6%96%B9%E6%B3%95/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="使用 dlv Debug dockerd(Docker Daemon) 的方法"><meta property='og:description' content="使用 dlv Debug dockerd(Docker Daemon) 的方法，相关技术教程和文档"><meta property='og:url' content='https://blog.961110.xyz:10010/post/%E4%BD%BF%E7%94%A8-dlv-debug-dockerddocker-daemon-%E7%9A%84%E6%96%B9%E6%B3%95/'><meta property='og:site_name' content='积跬步行千里'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2021-12-15T17:47:00+08:00'><meta property='article:modified_time' content='2021-12-15T17:47:00+08:00'><meta name=twitter:title content="使用 dlv Debug dockerd(Docker Daemon) 的方法"><meta name=twitter:description content="使用 dlv Debug dockerd(Docker Daemon) 的方法，相关技术教程和文档"><script async src="https://www.googletagmanager.com/gtag/js?id=G-YQ9F51F77Q"></script><script>var doNotTrack=!1,dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes";if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-YQ9F51F77Q")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src width height class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>积跬步行千里</a></h1><h2 class=site-description>JasonChio</h2></div></header><ol class=menu-social><li><a href=https://space.bilibili.com/30240401 title=Bilibili rel=me><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg></a></li><li><a href=mailto:zyb389120217@gmail.com title=Email rel=me><svg class="icon icon-tabler icon-tabler-messages" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M21 14l-3-3h-7a1 1 0 01-1-1V4a1 1 0 011-1h9a1 1 0 011 1v10"/><path d="M14 15v2a1 1 0 01-1 1H6l-3 3V11a1 1 0 011-1h2"/></svg></a></li><li><a href=https://github.com/jasonchio-cn title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li></ol><ol class=menu id=main-menu><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title"></h2><div class=widget--toc><nav class=toc-nav id=TableOfContents><ol><li><a href=#使用-dlv-来-debug-dockerddocker-daemon>使用 dlv 来 Debug dockerd(Docker Daemon)</a><ol><li><a href=#编译-docker-daemon>编译 Docker Daemon</a></li><li><a href=#安装-dlv>安装 dlv</a></li><li><a href=#编译可-debug-的-dockerd>编译可 Debug 的 dockerd</a></li><li><a href=#利用-dlv-开始-debug>利用 dlv 开始 debug</a></li><li><a href=#其他问题>其他问题</a></li></ol></li><li><a href=#参考链接>参考链接</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/%E4%BD%BF%E7%94%A8-dlv-debug-dockerddocker-daemon-%E7%9A%84%E6%96%B9%E6%B3%95/>使用 dlv Debug dockerd(Docker Daemon) 的方法</a></h2><h3 class=article-subtitle>使用 dlv Debug dockerd(Docker Daemon) 的方法，相关技术教程和文档</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2021-12-15T17:47:00+08:00>2021-12-15</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><aside class=article-toc><details><summary><div class=article-toc-title><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>
+<span></span></div></summary><nav class=toc-nav><ol><li><a href=#使用-dlv-来-debug-dockerddocker-daemon>使用 dlv 来 Debug dockerd(Docker Daemon)</a><ol><li><a href=#编译-docker-daemon>编译 Docker Daemon</a></li><li><a href=#安装-dlv>安装 dlv</a></li><li><a href=#编译可-debug-的-dockerd>编译可 Debug 的 dockerd</a></li><li><a href=#利用-dlv-开始-debug>利用 dlv 开始 debug</a></li><li><a href=#其他问题>其他问题</a></li></ol></li><li><a href=#参考链接>参考链接</a></li></ol></nav></details></aside><section class=article-content><h2 id=使用-dlv-来-debug-dockerddocker-daemon>使用 dlv 来 Debug dockerd(Docker Daemon)</h2><h3 id=编译-docker-daemon>编译 Docker Daemon</h3><p>编译 Docker Daemon 的两种方式已经在 <a class=link href=https://blog.961110.xyz/posts/21885.html target=_blank rel=noopener>前面的博文</a> 中比较详细的说明了。</p><h3 id=安装-dlv>安装 dlv</h3><p>安装</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>go get -u github.com/go-delve/delve/cmd/dlv
+</span></span></code></pre></td></tr></table></div></div><p>验证是否安装成功，输入 <code>dlv version</code>，安装成功会有如下输出。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>Delve Debugger
+</span></span><span class=line><span class=cl>Version: 1.7.3
+</span></span><span class=line><span class=cl>Build: <span class=nv>$Id</span>: c532746bc713b05a49680bc8c36b27c72c391a6b $
+</span></span></code></pre></td></tr></table></div></div><h3 id=编译可-debug-的-dockerd>编译可 Debug 的 dockerd</h3><p>在之前的博文中，没有考虑到编译出的 Docker Daemon 需要调试，所以在用 dlv debug 的时候会报错。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>could not get .debug_frame section: could not find .debug_frame section
+</span></span></code></pre></td></tr></table></div></div><p>默认情况下在编译 dockerd 的时候会有 <code>-w</code> 参数来关闭 DWARP 调试信息，这样就无法在二进制文件上使用 gdb 的特定功能如设置断点获取堆栈跟踪信息。所以在需要在编译脚本中增加 <code>DOCKER_DEBUG=true</code>，这样在编译时会自动删除 ldflags 中的 <code>-w</code> 参数，具体的修改位置是 <code>/home/jason/GOPATH/src/github.com/docker/docker/hack/make.sh:30</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl><span class=nb>set</span> -o pipefail
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>DOCKER_PKG</span><span class=o>=</span><span class=s1>&#39;github.com/docker/docker&#39;</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>SCRIPTDIR</span><span class=o>=</span><span class=s2>&#34;</span><span class=k>$(</span><span class=nb>cd</span> <span class=s2>&#34;</span><span class=k>$(</span>dirname <span class=s2>&#34;</span><span class=si>${</span><span class=nv>BASH_SOURCE</span><span class=p>[0]</span><span class=si>}</span><span class=s2>&#34;</span><span class=k>)</span><span class=s2>&#34;</span> <span class=o>&amp;&amp;</span> <span class=nb>pwd</span><span class=k>)</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>MAKEDIR</span><span class=o>=</span><span class=s2>&#34;</span><span class=nv>$SCRIPTDIR</span><span class=s2>/make&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>PKG_CONFIG</span><span class=o>=</span><span class=si>${</span><span class=nv>PKG_CONFIG</span><span class=k>:-</span><span class=nv>pkg</span><span class=p>-config</span><span class=si>}</span>
+</span></span><span class=line><span class=cl><span class=c1># 新增的一行</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>DOCKER_DEBUG</span><span class=o>=</span><span class=nb>true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>echo</span>
+</span></span><span class=line><span class=cl>...
+</span></span></code></pre></td></tr></table></div></div><p>在 Goland 的远程配置中，根据提示有两种方法来调试 Docker Daemon</p><img src=https://images.961110.xyz:5001/i/2021/12/16/Go-Remote-.png alt=image-20211216200604227 style=zoom:50%><ol><li>第一种方式是使用 dlv 进而编译，但是需要配置一大堆参数，不太方便。</li><li>第二种方式需要在编译时增加 <code>-gcflags</code> 参数，对应的修改位置是 <code>/home/jason/GOPATH/src/github.com/docker/docker/hack/make/.binary:87</code></li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>go build <span class=se>\
+</span></span></span><span class=line><span class=cl>	-o <span class=s2>&#34;</span><span class=nv>$DEST</span><span class=s2>/</span><span class=nv>$BINARY_FULLNAME</span><span class=s2>&#34;</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>	<span class=s2>&#34;</span><span class=si>${</span><span class=nv>BUILDFLAGS</span><span class=p>[@]</span><span class=si>}</span><span class=s2>&#34;</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>	<span class=c1># 增加的一行参数</span>
+</span></span><span class=line><span class=cl>	-gcflags <span class=s2>&#34;all=-N -l&#34;</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>	-ldflags <span class=s2>&#34;
+</span></span></span><span class=line><span class=cl><span class=s2>	</span><span class=nv>$LDFLAGS</span><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>	</span><span class=nv>$LDFLAGS_STATIC_DOCKER</span><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>	</span><span class=nv>$DOCKER_LDFLAGS</span><span class=s2>
+</span></span></span><span class=line><span class=cl><span class=s2>&#34;</span> <span class=se>\
+</span></span></span><span class=line><span class=cl>	<span class=si>${</span><span class=nv>GO_PACKAGE</span><span class=si>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>修改完成后，在 <code>Docker 项目根目录</code> 输入下面命令来手动构建 dockerd 二进制文件。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nv>VERSION</span><span class=o>=</span>test-build <span class=nv>DOCKER_GITCOMMIT</span><span class=o>=</span><span class=m>1</span> ./hack/make.sh binary
+</span></span></code></pre></td></tr></table></div></div><p>构建完成后 cd 到 <code>Docker 项目根目录/bundles/binary-daemon</code> 就可以看到刚刚编译出的文件 dockerd-test-build，并且已经做了软链接。</p><p>理所当然的构建出的 dockerd 会增加一定的体积</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 修改前</span>
+</span></span><span class=line><span class=cl>总用量 62M
+</span></span><span class=line><span class=cl>drwxr-xr-x <span class=m>2</span> jason root 4.0K 12月 <span class=m>16</span> 19:46 .
+</span></span><span class=line><span class=cl>drwxr-xr-x <span class=m>3</span> jason root 4.0K 12月 <span class=m>16</span> 19:46 ..
+</span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> jason root   <span class=m>19</span> 12月 <span class=m>16</span> 19:46 dockerd -&gt; dockerd-jason-build
+</span></span><span class=line><span class=cl>-rwxr-xr-x <span class=m>1</span> jason root  62M 12月 <span class=m>16</span> 19:46 dockerd-jason-build
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> jason root   <span class=m>54</span> 12月 <span class=m>16</span> 19:46 dockerd-jason-build.md5
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> jason root   <span class=m>86</span> 12月 <span class=m>16</span> 19:46 dockerd-jason-build.sha256
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 修改后</span>
+</span></span><span class=line><span class=cl>总用量 79M
+</span></span><span class=line><span class=cl>drwxr-xr-x <span class=m>2</span> jason root 4.0K 12月 <span class=m>16</span> 19:50 .
+</span></span><span class=line><span class=cl>drwxr-xr-x <span class=m>3</span> jason root 4.0K 12月 <span class=m>16</span> 19:50 ..
+</span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> jason root   <span class=m>19</span> 12月 <span class=m>16</span> 19:50 dockerd -&gt; dockerd-jason-build
+</span></span><span class=line><span class=cl>-rwxr-xr-x <span class=m>1</span> jason root  79M 12月 <span class=m>16</span> 19:50 dockerd-jason-build
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> jason root   <span class=m>54</span> 12月 <span class=m>16</span> 19:50 dockerd-jason-build.md5
+</span></span><span class=line><span class=cl>-rw-r--r-- <span class=m>1</span> jason root   <span class=m>86</span> 12月 <span class=m>16</span> 19:50 dockerd-jason-build.sha256
+</span></span></code></pre></td></tr></table></div></div><h3 id=利用-dlv-开始-debug>利用 dlv 开始 debug</h3><p>使用下面的命令启动 dockerd，就可以 debug 了</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>sudo <span class=nv>$GOPATH</span>/bin/dlv --headless<span class=o>=</span><span class=nb>true</span> --api-version<span class=o>=</span><span class=m>2</span> --log --listen<span class=o>=</span>:2345 <span class=nb>exec</span> ./dockerd -- -D -H unix:// --containerd<span class=o>=</span>/run/containerd/containerd.sock
+</span></span></code></pre></td></tr></table></div></div><p><strong>&ndash;headless=true 表示不要命令界面</strong></p><p>或者使用下面的脚本来 debug 已经在运行的 dockerd</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=cp>#!/bin/bash
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;Start to execute dlv_debug script&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;===========================================================&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>pid</span><span class=o>=</span><span class=k>$(</span>ps -ef <span class=p>|</span> grep <span class=s1>&#39;docker&#39;</span> <span class=p>|</span> grep <span class=s1>&#39;dockerd&#39;</span> <span class=p>|</span> grep -v grep <span class=p>|</span> awk <span class=s1>&#39;{print $2}&#39;</span><span class=k>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;pid of dockerd is </span><span class=nv>$pid</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s1>&#39;你的密码&#39;</span> <span class=p>|</span> sudo -S <span class=nv>$GOPATH</span>/bin/dlv attach <span class=nv>$pid</span> --headless<span class=o>=</span><span class=nb>true</span> --api-version<span class=o>=</span><span class=m>2</span> --log --listen<span class=o>=</span>:2345
+</span></span></code></pre></td></tr></table></div></div><p>dlv 具体的使用方法可以参考其他博主的资料，博文下方有 <a class=link href=http://blog.961110.xyz/posts/20654.html#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5 target=_blank rel=noopener>参考链接</a>。</p><h3 id=其他问题>其他问题</h3><p>构建后使用 <code>docker run hello-world</code> 来进行验证，镜像移植拉不下来，错误 log 如下</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>error pulling image configuration: Get https://production.cloudflare.docker.com/registry-
+</span></span><span class=line><span class=cl>v2/docker/registry/v2/blobs/sha256/d2/d23bdf5b1b1b1afce5f1d0fd33e7ed8afbc084b594b9ccf742a5b27080d8
+</span></span><span class=line><span class=cl>a4a8/data?verify<span class=o>=</span>1596513158-78B0ocrR%2Bn4iMvUrPrVx12jrGX8%3D: dial tcp 104.18.122.25:443: i/o timeout
+</span></span></code></pre></td></tr></table></div></div><p>原因是没有配置 docker 源</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 没有的话就新建一个</span>
+</span></span><span class=line><span class=cl>vim /etc/docker/daemon.json
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 加入以下内容</span>
+</span></span><span class=line><span class=cl><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;registry-mirrors&#34;</span>: <span class=o>[</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;https://hub-mirror.c.163.com&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;https://registry.aliyuncs.com&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;https://registry.docker-cn.com&#34;</span>,
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;https://docker.mirrors.ustc.edu.cn&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=参考链接>参考链接</h2><ol><li><a class=link href=https://liqiang.io/post/remote-debug-go-with-delve-bea7abce target=_blank rel=noopener>Golang 调试工具 Delve</a></li><li><a class=link href=https://zhuanlan.zhihu.com/p/364346530 target=_blank rel=noopener>Dlv 深入探究</a></li><li><a class=link href=http://www.4k8k.xyz/article/nangonghen/114602755 target=_blank rel=noopener>源码编译docker-ce v18.09.2</a></li><li><a class=link href=https://blog.csdn.net/elvishehai/article/details/107782762 target=_blank rel=noopener>docker run 报错: dial tcp xxxxxxxx:443: i/o timeout报错</a></li><li><a class=link href=https://blog.csdn.net/cyq6239075/article/details/103911098 target=_blank rel=noopener>go build 命令参数详解</a></li><li><a class=link href=https://blog.csdn.net/u010525694/article/details/103111375 target=_blank rel=noopener>dlv远程调试golang程序注意事项</a></li><li><a class=link href=https://github.com/go-delve/delve target=_blank rel=noopener>delve 官方 Github 链接</a></li><li><a class=link href=https://blog.abnerzhao.com/posts/go-build/ target=_blank rel=noopener>go build 编译优化</a></li><li><a class=link href="https://blog.csdn.net/u013536232/article/details/104123861?spm=1001.2101.3001.6650.5&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.highlightwordscore&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.highlightwordscore" target=_blank rel=noopener>goland远程调试</a></li><li><a class=link href=https://linux.cn/article-12400-1.html target=_blank rel=noopener>使用 Delve 代替 Println 来调试 Go 程序</a></li></ol></section><footer class="article-meta article-footer"><section class="article-copyright inline-meta"><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{const e=[".main-article",".widget--toc"];e.forEach(e=>{const t=document.querySelector(e);t&&renderMathInElement(t,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})})</script></article><script src=//cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js></script><div id=tcomment></div><style>.twikoo{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}:root[data-scheme=dark]{--twikoo-body-text-color-main:rgba(255, 255, 255, 0.9);--twikoo-body-text-color:rgba(255, 255, 255, 0.7)}.twikoo .el-input-group__prepend,.twikoo .tk-action-icon,.twikoo .tk-submit-action-icon,.twikoo .tk-time,.twikoo .tk-comments-no,.twikoo .tk-comments-count{color:var(--twikoo-body-text-color)}.twikoo .el-input__inner,.twikoo .el-textarea__inner,.twikoo .tk-preview-container,.twikoo .tk-content,.twikoo .tk-nick,.twikoo .tk-send,.twikoo .tk-comments-no,.twikoo .el-input__count,.twikoo .tk-submit-action-icon{color:var(--twikoo-body-text-color-main)!important}.twikoo .el-button{color:var(--twikoo-body-text-color)!important}.twikoo .el-input__count{color:var(--twikoo-body-text-color)!important}.OwO .OwO-body{background-color:var(--body-background)!important;color:var(--body-text-color)!important}</style><script>twikoo.init({envId:"https://comment.961110.xyz:10010",el:"#tcomment",lang:"zh-CN"})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2026 JasonChio</section><section class=powerby>间歇性更新 持续性尝试更新<br><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>
